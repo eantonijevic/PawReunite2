@@ -1,0 +1,69 @@
+/*C4*/SET SCHEMA PUBLIC
+INSERT INTO USER VALUES(13,'diego.larralde@gmail.com','Diego','Larralde')
+COMMIT
+DISCONNECT
+/*C5*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C6*/SET SCHEMA PUBLIC
+INSERT INTO USER VALUES(14,'diego.larralde@gmail.com','Diego','Larralde')
+COMMIT
+DISCONNECT
+/*C7*/SET SCHEMA PUBLIC
+drop table USER if exists
+create table USER (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), LAST_NAME varchar(255), primary key (id))
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego','Larralde')
+COMMIT
+DISCONNECT
+/*C8*/SET SCHEMA PUBLIC
+drop table USER if exists
+create table USER (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), LAST_NAME varchar(255), primary key (id))
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego','Larralde')
+COMMIT
+DISCONNECT
+/*C9*/SET SCHEMA PUBLIC
+drop table USER if exists
+create table USER (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), LAST_NAME varchar(255), primary key (id))
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego','Larralde')
+COMMIT
+DISCONNECT
+/*C10*/SET SCHEMA PUBLIC
+drop table USER if exists
+create table USER (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), primary key (id))
+alter table USER add constraint IDX_EMAIL unique (EMAIL)
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',NULL,'Larralde')
+COMMIT
+DISCONNECT
+/*C11*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C12*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C13*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C14*/SET SCHEMA PUBLIC
+drop table USER if exists
+create table USER (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), primary key (id))
+alter table USER add constraint EMAIL unique (EMAIL)
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',NULL,'Larralde')
+COMMIT
+DISCONNECT
+/*C15*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C16*/SET SCHEMA PUBLIC
+set schema PUBLIC
+DELETE FROM USER WHERE ID=1
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',FALSE,'Larralde')
+COMMIT
+DELETE FROM USER WHERE ID=1
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',TRUE,'Larralde')
+COMMIT
+/*C17*/SET SCHEMA PUBLIC
+drop table USER if exists
+create table USER (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), primary key (id))
+alter table USER add constraint EMAIL unique (EMAIL)
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',NULL,'Larralde')
+COMMIT
+DISCONNECT
+/*C16*/DISCONNECT
+/*C18*/SET SCHEMA PUBLIC
+set schema PUBLIC
+DISCONNECT
