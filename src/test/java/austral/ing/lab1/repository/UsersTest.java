@@ -1,14 +1,14 @@
 package austral.ing.lab1.repository;
 
+import austral.ing.lab1.entity.Users;
 import austral.ing.lab1.model.User;
+import austral.ing.lab1.util.EntityManagers;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -17,7 +17,6 @@ import static org.junit.Assert.assertThat;
 
 public class UsersTest {
   private EntityManagerFactory managerFactory;
-  private UserDB users;
 
   @After
   public void tearDown() throws Exception {
@@ -27,7 +26,7 @@ public class UsersTest {
   @Before
   public void setUp() {
     managerFactory = Persistence.createEntityManagerFactory("test");
-    users = new UserDB(managerFactory.createEntityManager());
+    EntityManagers.setFactory(managerFactory);
   }
 
   @Test
@@ -38,14 +37,17 @@ public class UsersTest {
     user.setFirstName("Diego");
     user.setLastName("Larralde");
 
-    assertThat(users.persist(user).getId(), greaterThan(0L));
+    assertThat(Users.persist(user).getId(), greaterThan(0L));
 
-    final Optional<User> persistedUser = users.findById(user.getId());
+    final Optional<User> persistedUser = Users.findById(user.getId());
 
     assertThat(persistedUser.isPresent(), is(true));
     assertThat(persistedUser.get().getEmail(), is("diego.larralde@gmail.com"));
     assertThat(persistedUser.get().getFirstName(), is("Diego"));
     assertThat(persistedUser.get().getLastName(), is("Larralde"));
+
+    Optional<User> byEmail = Users.findByEmail(persistedUser.get().getEmail());
+    System.out.println(byEmail);
   }
 
 }

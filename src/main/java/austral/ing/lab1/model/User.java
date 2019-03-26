@@ -3,15 +3,19 @@ package austral.ing.lab1.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "USER", indexes = @Index(name = "EMAIL", columnList = "EMAIL", unique = true))
+//@Table(name = "USER", indexes = @Index(name = "EMAIL", columnList = "EMAIL", unique = true))
 public class User {
 
   @Column(name = "FIRST_NAME")
@@ -30,6 +34,13 @@ public class User {
   @GeneratedValue(generator = "increment")
   @GenericGenerator(name = "increment", strategy = "increment")
   private Long id;
+
+  @Column(name = "PASSWORD")
+  private String password;
+
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private List<Address> addresses = new ArrayList<>();
+
 
   public String getFirstName() {
     return firstName;
@@ -69,5 +80,13 @@ public class User {
 
   public void setActive(Boolean active) {
     isActive = active;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getPassword() {
+    return password;
   }
 }

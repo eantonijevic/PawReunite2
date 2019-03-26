@@ -9,15 +9,16 @@
         </description>
 
         <class>austral.ing.lab1.model.User</class>
+        <class>austral.ing.lab1.model.Address</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:hsqls://localhost/xdb;shutdown=true" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:hsql://localhost/xdb;shutdown=true" />
             <property name="javax.persistence.jdbc.user" value="sa" />
             <property name="javax.persistence.jdbc.password" value="" />
 
             <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="create" />
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
         </properties>
 
     </persistence-unit>
