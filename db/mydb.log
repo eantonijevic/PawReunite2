@@ -1,4 +1,4 @@
-/*C2*/SET SCHEMA PUBLIC
+/*C5*/SET SCHEMA PUBLIC
 alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
 alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
 drop table Address if exists
@@ -11,8 +11,6 @@ create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(25
 create table User_Address (users_id bigint not null, addresses_id bigint not null)
 alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
 alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
-INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',NULL,'Larralde',NULL)
-COMMIT
 alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
 alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
 drop table Address if exists
@@ -20,7 +18,7 @@ drop table User if exists
 drop table User_Address if exists
 drop sequence hibernate_sequence if exists
 DISCONNECT
-/*C3*/SET SCHEMA PUBLIC
+/*C6*/SET SCHEMA PUBLIC
 drop table Address if exists
 drop table User if exists
 drop table User_Address if exists
@@ -31,8 +29,19 @@ create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(25
 create table User_Address (users_id bigint not null, addresses_id bigint not null)
 alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
 alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
-INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',NULL,'Larralde',NULL)
-COMMIT
+/*C7*/SET SCHEMA PUBLIC
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
 alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
 alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
 drop table Address if exists
@@ -40,7 +49,156 @@ drop table User if exists
 drop table User_Address if exists
 drop sequence hibernate_sequence if exists
 DISCONNECT
-/*C4*/SET SCHEMA PUBLIC
+/*C8*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C9*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C6*/drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C10*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C11*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C12*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C13*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C14*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C15*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C16*/SET SCHEMA PUBLIC
 drop table Address if exists
 drop table User if exists
 drop table User_Address if exists
@@ -53,3 +211,68 @@ alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key 
 alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
 INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',TRUE,'Larralde','1234')
 COMMIT
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C17*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',TRUE,'Larralde','1234')
+COMMIT
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C18*/SET SCHEMA PUBLIC
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+create sequence hibernate_sequence start with 1 increment by 1
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+INSERT INTO USER VALUES(1,'jd@gmail.com','john',TRUE,'doe','1234')
+COMMIT
+INSERT INTO USER VALUES(2,'jd@gmail.com','john',TRUE,'doe','1234')
+COMMIT
+alter table User_Address drop constraint FK99mvwgxako4npuni7qj8ji0gy
+alter table User_Address drop constraint FKfiie5434h91u12cb45sa7y3xc
+drop table Address if exists
+drop table User if exists
+drop table User_Address if exists
+drop sequence hibernate_sequence if exists
+DISCONNECT
+/*C19*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C20*/SET SCHEMA PUBLIC
+create table Address (id bigint not null, primary key (id))
+create table User (id bigint not null, EMAIL varchar(255), FIRST_NAME varchar(255), IS_ACTIVE boolean, LAST_NAME varchar(255), PASSWORD varchar(255), primary key (id))
+create table User_Address (users_id bigint not null, addresses_id bigint not null)
+create sequence hibernate_sequence start with 1 increment by 1
+alter table User_Address add constraint FK99mvwgxako4npuni7qj8ji0gy foreign key (addresses_id) references Address
+alter table User_Address add constraint FKfiie5434h91u12cb45sa7y3xc foreign key (users_id) references User
+INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',TRUE,'Larralde','1234')
+COMMIT
+DISCONNECT
+/*C21*/SET SCHEMA PUBLIC
+INSERT INTO USER VALUES(2,'jd@gmail.com','john',TRUE,'doe','1234')
+COMMIT
+DISCONNECT

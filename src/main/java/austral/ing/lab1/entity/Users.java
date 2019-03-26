@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static austral.ing.lab1.util.EntityManagers.currentEntityManager;
+import static austral.ing.lab1.util.LangUtils.checkedList;
 import static austral.ing.lab1.util.Transactions.tx;
 
 public class Users {
@@ -28,8 +29,10 @@ public class Users {
     );
   }
 
-  public List<User> listAll() {
-    return Collections.emptyList();
+  public static List<User> listAll() {
+    return tx(() ->
+            checkedList(currentEntityManager().createQuery("SELECT u FROM User u").getResultList())
+    );
   }
 
   public static User persist(User user) {

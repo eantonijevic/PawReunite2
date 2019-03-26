@@ -24,7 +24,6 @@ public class ServletExample extends HttpServlet {
 
     final PrintWriter out = resp.getWriter();
 
-
     out.println("<html>");
     out.println("  <head>");
     out.println("    <title>Ejemplo Servlet</title>");
