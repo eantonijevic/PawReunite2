@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+</head>
+<body>
+    <script>
+        function loadUsers() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("ajax-example").innerHTML = this.response;
+                }
+            };
+            xhttp.open("GET", "/secure/user", true);
+            xhttp.send();
+        }
+
+    </script>
+
+    <h1>List users - AJAX</h1>
+    <button onclick="loadUsers()">Fetch users</button>
+    <div id="ajax-example"></div>
+</body>
+</html>
