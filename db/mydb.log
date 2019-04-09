@@ -1,7 +1,0 @@
-/*C4*/SET SCHEMA PUBLIC
-INSERT INTO USER VALUES(5,'paca@gmail.com','paca',TRUE,'fuentes','1234')
-COMMIT
-INSERT INTO USER VALUES(6,'paca@gmail.com','paca',TRUE,'fuentes','1234')
-COMMIT
-INSERT INTO USER VALUES(7,'pacafuentes@gmail.com','paca',TRUE,'fuentes','1234')
-COMMIT

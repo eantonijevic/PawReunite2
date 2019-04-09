@@ -52,3 +52,6 @@ INSERT INTO USER VALUES(1,'diego.larralde@gmail.com','Diego',TRUE,'Larralde','12
 INSERT INTO USER VALUES(2,'jd@gmail.com','john',TRUE,'doe','1234')
 INSERT INTO USER VALUES(3,'paca@gmail.com','paca',TRUE,'fuentes','12345')
 INSERT INTO USER VALUES(4,'paca@gmi.com','paca',TRUE,'fuentes','1234')
+INSERT INTO USER VALUES(5,'paca@gmail.com','paca',TRUE,'fuentes','1234')
+INSERT INTO USER VALUES(6,'paca@gmail.com','paca',TRUE,'fuentes','1234')
+INSERT INTO USER VALUES(7,'pacafuentes@gmail.com','paca',TRUE,'fuentes','1234')
