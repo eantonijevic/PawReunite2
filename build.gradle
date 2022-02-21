@@ -16,5 +16,5 @@ dependencies {
 }
 
 application {
-    mainClassName = 'lab1.monolitich.App'
+    mainClassName = 'lab1.monolithic.App'
 }
