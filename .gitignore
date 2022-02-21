@@ -1,8 +1,58 @@
-null
-out
+*.iml
+.DS_Store
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
 .gradle
-.DS_STORE
+.vscode
+.metals
+*.class
+bin/
+.bloop/
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+
+# IntelliJ project files
 .idea
-build
+*.iml
+out
+out/
+gen### Gradle template
+.gradle
+build/
+.DS_Store
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheetst
+
+# Package Files #
+*.jar
+*.war
+*.ear
 target
 *.iml
+.idea
+.classpath
+.project
+.settings
+*.ipr
+*.iws
+.DS_Store
+classes
+.cache
+.cache-main
+.cache-tests
+.gradle
+build/
+.tmp
+src_managed/
+!gradle/**/*.jar
+out
