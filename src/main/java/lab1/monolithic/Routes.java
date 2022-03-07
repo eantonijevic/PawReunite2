@@ -14,6 +14,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static spark.Spark.*;
 
@@ -21,17 +22,21 @@ public class Routes {
 
     private static final String USER_SESSION_ID = "user";
 
-    /** TEMPLATES **/
+    /**
+     * TEMPLATES
+     **/
     public static final String SIGN_UP_TEMPLATE = "register.ftl";
-    public static final String LOGIN_TEMPLATE   = "login.ftl";
-    public static final String HOME_TEMPLATE   = "home.ftl";
+    public static final String LOGIN_TEMPLATE = "login.ftl";
+    public static final String HOME_TEMPLATE = "home.ftl";
 
-    /** ROUTES **/
-    public static final String STATUS_ROUTE   = "/status";
-    public static final String HOME_ROUTE     = "/home";
+    /**
+     * ROUTES
+     **/
+    public static final String STATUS_ROUTE = "/status";
+    public static final String HOME_ROUTE = "/home";
     public static final String REGISTER_ROUTE = "/register";
-    public static final String LOGIN_ROUTE    = "/login";
-    public static final String LOGOUT_ROUTE    = "/logout";
+    public static final String LOGIN_ROUTE = "/login";
+    public static final String LOGOUT_ROUTE = "/logout";
 
     final static private MonolithicSystem system = new MonolithicSystem();
 
@@ -62,15 +67,15 @@ public class Routes {
                 res.redirect("/login?ok");
                 return halt();
             } else {
-                final Map<String, Object> model = Map.of("errorMsg", "User already exists");
+                final Map<String, Object> model = Map.of("message", "User already exists");
                 return render(model, SIGN_UP_TEMPLATE);
             }
         });
 
         get(LOGIN_ROUTE, (req, res) -> {
-            final User authenticatedUser = getAuthenticatedUser(req);
+            final Optional<User> authenticatedUser = getAuthenticatedUser(req);
 
-            if (authenticatedUser == null) {
+            if (authenticatedUser.isEmpty()) {
                 final Map<String, Object> model = new HashMap<>();
 
                 if (req.queryParams("ok") != null) model.put("message", "User created");
@@ -82,15 +87,15 @@ public class Routes {
             return halt();
         });
         post(LOGIN_ROUTE, (req, res) -> {
-            final User authenticatedUser = getAuthenticatedUser(req);
+            final Optional<User> authenticatedUser = getAuthenticatedUser(req);
 
-            if (authenticatedUser == null) {
+            if (authenticatedUser.isEmpty()) {
                 final LoginForm form = LoginForm.createFromBody(req.body());
 
-                final User validUser = system.checkLogin(form);
+                final Optional<User> validUser = system.checkLogin(form);
 
-                if (validUser != null) {
-                    setAuthenticatedUser(req, validUser);
+                if (validUser.isPresent()) {
+                    setAuthenticatedUser(req, validUser.get());
                     res.redirect(HOME_ROUTE);
                     return halt();
                 } else {
@@ -99,6 +104,7 @@ public class Routes {
                     return render(model, LOGIN_TEMPLATE);
                 }
             } else {
+                res.redirect(LOGIN_ROUTE);
                 return halt();
             }
         });
@@ -115,9 +121,9 @@ public class Routes {
 
     private static void authenticatedGet(final String path, final Route route) {
         get(path, (request, response) -> {
-            final User authenticatedUser = getAuthenticatedUser(request);
+            final Optional<User> authenticatedUser = getAuthenticatedUser(request);
 
-            if (authenticatedUser != null) {
+            if (authenticatedUser.isPresent()) {
                 return route.handle(request, response);
             } else {
                 response.redirect(LOGIN_ROUTE);
@@ -147,8 +153,8 @@ public class Routes {
         return new FreeMarkerEngine().render(new ModelAndView(Collections.emptyMap(), template));
     }
 
-    private static User getAuthenticatedUser(Request request) {
-        final String email = request.session().attribute(USER_SESSION_ID);
-        return email != null ? system.findUserByEmail(email) : null;
+    private static Optional<User> getAuthenticatedUser(Request request) {
+        String email = request.session().attribute(USER_SESSION_ID);
+        return Optional.ofNullable(email).flatMap(system::findUserByEmail);
     }
 }

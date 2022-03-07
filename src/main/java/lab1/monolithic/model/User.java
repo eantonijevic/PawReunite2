@@ -1,9 +1,20 @@
 package lab1.monolithic.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "USERS")
 public class User {
 
-    private final String email;
-    private final String password;
+    @Id
+    private String email;
+
+    private String password;
+
+    public User() {
+    }
 
     public User(String email, String password) {
         this.email = email;

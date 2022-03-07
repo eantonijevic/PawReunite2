@@ -8,6 +8,11 @@
 <body class="text-center">
 
 <main style="max-width: 330px;">
+    <#if message??>
+        <div class="alert alert-success">
+            ${message}
+        </div>
+    </#if>
     <form action="/register" role="form" method="post">
         <h1 class="h3 mb-3 fw-normal">Sign up</h1>
 
@@ -21,6 +26,7 @@
         </div>
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+        <a href="/register">Sign In</a>
     </form>
 </main>
 

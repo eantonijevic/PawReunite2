@@ -3,27 +3,29 @@ package lab1.monolithic;
 import lab1.monolithic.model.LoginForm;
 import lab1.monolithic.model.RegistrationUserForm;
 import lab1.monolithic.model.User;
-import lab1.monolithic.repository.UserRepository;
+import lab1.monolithic.repository.Users;
+
+import java.util.Optional;
 
 public class MonolithicSystem {
 
-    private final UserRepository userRepository = new UserRepository();
+    private final Users users = new Users();
 
     public User registerUser(RegistrationUserForm form) {
-        if (userRepository.exists(form.getEmail())) {
+        if (users.exists(form.getEmail())) {
             return null;
         }
-        return userRepository.createUser(form);
+        return users.createUser(form);
     }
 
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public Optional<User> findUserByEmail(String email) {
+        return users.findByEmail(email);
     }
 
-    public User checkLogin(LoginForm form) {
-        final User foundUser = userRepository.findByEmail(form.getEmail());
+    public Optional<User> checkLogin(LoginForm form) {
+        return users.findByEmail(form.getEmail())
+                .filter(foundUser -> validPassword(form, foundUser));
 
-        return foundUser != null && validPassword(form, foundUser) ? foundUser : null;
     }
 
     private boolean validPassword(LoginForm form, User foundUser) {
