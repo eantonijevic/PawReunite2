@@ -1,7 +1,7 @@
 package lab1.monolithic;
 
 
-import lab1.monolithic.persistence.Database;
+import lab1.monolithic.persistence.DatabaseServer;
 import lab1.monolithic.persistence.EntityManagers;
 import spark.Spark;
 
@@ -14,10 +14,10 @@ import static spark.Spark.staticFiles;
 public class MonolithicWebApp {
 
     private final Routes routes = new Routes();
-    private final Database db = new Database();
+    private final DatabaseServer db = new DatabaseServer();
 
     public void start() {
-        startDatabase();
+        startDatabase();//
         startWebServer();
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("monolithic-db");
         EntityManagers.setFactory(entityManagerFactory);

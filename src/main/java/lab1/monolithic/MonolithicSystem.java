@@ -9,13 +9,10 @@ import java.util.Optional;
 
 public class MonolithicSystem {
 
-    private final Users users = new Users();
+    private Users users = new Users();
 
     public User registerUser(RegistrationUserForm form) {
-        if (users.exists(form.getEmail())) {
-            return null;
-        }
-        return users.createUser(form);
+        return users.exists(form.getEmail()) ? null : users.createUser(form);
     }
 
     public Optional<User> findUserByEmail(String email) {
@@ -25,7 +22,6 @@ public class MonolithicSystem {
     public Optional<User> checkLogin(LoginForm form) {
         return users.findByEmail(form.getEmail())
                 .filter(foundUser -> validPassword(form, foundUser));
-
     }
 
     private boolean validPassword(LoginForm form, User foundUser) {

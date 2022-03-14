@@ -2,6 +2,7 @@ package lab1.monolithic.repository;
 
 import lab1.monolithic.model.RegistrationUserForm;
 import lab1.monolithic.model.User;
+import lab1.monolithic.persistence.Transactions;
 
 import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Users {
 
         if (exists(newUser.getEmail())) throw new IllegalStateException("User already exists.");
 
-        return persist(newUser);
+        return Transactions.persist(newUser);
     }
 
     public boolean exists(String email) {
@@ -32,20 +33,5 @@ public class Users {
                 .findFirst();
     }
 
-    public User persist(User user) {
-        final EntityTransaction tx = currentEntityManager().getTransaction();
 
-        try {
-            tx.begin();
-
-            currentEntityManager().persist(user);
-
-            tx.commit();
-            return user;
-        } catch (Exception e) {
-            e.printStackTrace();
-            tx.rollback();
-            throw e;
-        }
-    }
 }
