@@ -3,8 +3,6 @@ package lab1.monolithic;
 import lab1.monolithic.model.LoginForm;
 import lab1.monolithic.model.RegistrationUserForm;
 import lab1.monolithic.model.User;
-import org.eclipse.jetty.util.MultiMap;
-import org.eclipse.jetty.util.UrlEncoded;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Route;
@@ -45,20 +43,8 @@ public class Routes {
     }
 
     private void routes() {
-        get(STATUS_ROUTE, (req, res) -> "Monolithic App is up and running!");
-
-        authenticatedGet(HOME_ROUTE, (req, res) -> render(HOME_TEMPLATE));
-
-        get(LOGOUT_ROUTE, (req, res) -> {
-            clearAuthenticatedUser(req);
-            res.redirect(LOGIN_ROUTE);
-            return halt();
-        });
         get(REGISTER_ROUTE, (req, res) -> render(SIGN_UP_TEMPLATE));
         post(REGISTER_ROUTE, (req, res) -> {
-            final MultiMap<String> params = new MultiMap<>();
-            UrlEncoded.decodeTo(req.body(), params, "UTF-8");
-
             final RegistrationUserForm form = RegistrationUserForm.createFromBody(req.body());
 
             final User user = system.registerUser(form);
@@ -108,6 +94,16 @@ public class Routes {
                 return halt();
             }
         });
+
+        get(LOGOUT_ROUTE, (req, res) -> {
+            clearAuthenticatedUser(req);
+            res.redirect(LOGIN_ROUTE);
+            return halt();
+        });
+
+        get(STATUS_ROUTE, (req, res) -> "Monolithic App is up and running!");
+
+        authenticatedGet(HOME_ROUTE, (req, res) -> render(HOME_TEMPLATE));
     }
 
     private void setAuthenticatedUser(Request req, User user) {
@@ -154,7 +150,7 @@ public class Routes {
     }
 
     private static Optional<User> getAuthenticatedUser(Request request) {
-        String email = request.session().attribute(USER_SESSION_ID);
+        final String email = request.session().attribute(USER_SESSION_ID);
         return Optional.ofNullable(email).flatMap(system::findUserByEmail);
     }
 }

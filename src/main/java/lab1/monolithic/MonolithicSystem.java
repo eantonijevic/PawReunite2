@@ -25,6 +25,7 @@ public class MonolithicSystem {
     }
 
     private boolean validPassword(LoginForm form, User foundUser) {
+        // Super dummy implementation. Zero security
         return form.getPassword().equals(foundUser.getPassword());
     }
 }

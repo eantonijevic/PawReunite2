@@ -26,7 +26,7 @@
         </div>
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
-        <a href="/register">Sign In</a>
+        <a href="/login">Sign In</a>
     </form>
 </main>
 

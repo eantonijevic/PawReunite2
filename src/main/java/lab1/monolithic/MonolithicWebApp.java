@@ -17,7 +17,7 @@ public class MonolithicWebApp {
     private final DatabaseServer db = new DatabaseServer();
 
     public void start() {
-        startDatabase();//
+        startDatabase();
         startWebServer();
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("monolithic-db");
         EntityManagers.setFactory(entityManagerFactory);
