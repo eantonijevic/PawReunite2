@@ -34,10 +34,10 @@ public class Routes {
     public static final String LOGIN_ROUTE = "/login";
     public static final String LOGOUT_ROUTE = "/logout";
     public static final String USERS_ROUTE = "/users";
+    private MonolithicSystem system;
 
-    final static private MonolithicSystem system = new MonolithicSystem();
-
-    public void create() {
+    public void create(MonolithicSystem system) {
+        this.system = system;
         routes();
     }
 
@@ -104,11 +104,12 @@ public class Routes {
 
         authenticatedGet(HOME_ROUTE, (req, res) -> render(HOME_TEMPLATE));
 
-
-        get(USERS_ROUTE, (req, res) -> {
+        authenticatedGet(USERS_ROUTE, (req, res) -> {
             List<User> users = system.listUsers();
+            res.type("application/json");
             return new Gson().toJson(users);
         });
+
     }
 
     private void setAuthenticatedUser(Request req, User user) {
@@ -120,7 +121,7 @@ public class Routes {
         req.session().invalidate();
     }
 
-    private static void authenticatedGet(final String path, final Route route) {
+    private void authenticatedGet(final String path, final Route route) {
         get(path, (request, response) -> {
             final Optional<User> authenticatedUser = getAuthenticatedUser(request);
 
@@ -154,7 +155,7 @@ public class Routes {
         return new FreeMarkerEngine().render(new ModelAndView(Collections.emptyMap(), template));
     }
 
-    private static Optional<User> getAuthenticatedUser(Request request) {
+    private Optional<User> getAuthenticatedUser(Request request) {
         final String email = request.session().attribute(USER_SESSION_ID);
         return Optional.ofNullable(email).flatMap(system::findUserByEmail);
     }

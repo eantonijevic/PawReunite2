@@ -13,7 +13,6 @@ buildNumber.properties
 .vscode
 .metals
 *.class
-bin/
 .bloop/
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -35,7 +34,6 @@ build/
 .worksheetst
 
 # Package Files #
-*.jar
 *.war
 *.ear
 target
