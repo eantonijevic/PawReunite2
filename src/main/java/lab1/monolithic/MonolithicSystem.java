@@ -5,6 +5,7 @@ import lab1.monolithic.model.RegistrationUserForm;
 import lab1.monolithic.model.User;
 import lab1.monolithic.repository.Users;
 
+import java.util.List;
 import java.util.Optional;
 
 public class MonolithicSystem {
@@ -13,6 +14,10 @@ public class MonolithicSystem {
 
     public User registerUser(RegistrationUserForm form) {
         return users.exists(form.getEmail()) ? null : users.createUser(form);
+    }
+
+    public List<User> listUsers() {
+        return users.list();
     }
 
     public Optional<User> findUserByEmail(String email) {

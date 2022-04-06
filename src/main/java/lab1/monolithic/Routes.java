@@ -1,5 +1,6 @@
 package lab1.monolithic;
 
+import com.google.gson.Gson;
 import lab1.monolithic.model.LoginForm;
 import lab1.monolithic.model.RegistrationUserForm;
 import lab1.monolithic.model.User;
@@ -9,10 +10,7 @@ import spark.Route;
 import spark.Session;
 import spark.template.freemarker.FreeMarkerEngine;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static spark.Spark.*;
 
@@ -35,6 +33,7 @@ public class Routes {
     public static final String REGISTER_ROUTE = "/register";
     public static final String LOGIN_ROUTE = "/login";
     public static final String LOGOUT_ROUTE = "/logout";
+    public static final String USERS_ROUTE = "/users";
 
     final static private MonolithicSystem system = new MonolithicSystem();
 
@@ -104,6 +103,12 @@ public class Routes {
         get(STATUS_ROUTE, (req, res) -> "Monolithic App is up and running!");
 
         authenticatedGet(HOME_ROUTE, (req, res) -> render(HOME_TEMPLATE));
+
+
+        get(USERS_ROUTE, (req, res) -> {
+            List<User> users = system.listUsers();
+            return new Gson().toJson(users);
+        });
     }
 
     private void setAuthenticatedUser(Request req, User user) {

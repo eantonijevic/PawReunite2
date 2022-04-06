@@ -12,6 +12,8 @@ dependencies {
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'com.sparkjava:spark-core:2.9.3'
     implementation 'org.slf4j:slf4j-simple:1.7.36'
+    implementation 'com.google.code.gson:gson:2.7'
+
 
     implementation 'com.sparkjava:spark-template-freemarker:2.7.1'
     implementation 'org.hsqldb:hsqldb:2.6.1'

@@ -8,6 +8,7 @@ import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static lab1.monolithic.persistence.EntityManagers.currentEntityManager;
 import static lab1.monolithic.persistence.Transactions.tx;
@@ -33,5 +34,9 @@ public class Users {
                 .findFirst();
     }
 
-
+    public List<User> list() {
+        return new ArrayList<>(tx(() -> currentEntityManager()
+                .createQuery("SELECT u FROM User u", User.class)
+                .getResultList()));
+    }
 }
