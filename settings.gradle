@@ -1,1 +1,4 @@
-rootProject.name = 'lab1-monolithic'
+rootProject.name = 'lab1-web-app'
+
+include 'rest-api'
+include 'ui'
