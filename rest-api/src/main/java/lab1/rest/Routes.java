@@ -94,6 +94,7 @@ public class Routes {
         });
 
         authorizedGet(USER_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
+        authorizedGet(USER_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
     }
 
     private void authorizedGet(final String path, final Route route) {
