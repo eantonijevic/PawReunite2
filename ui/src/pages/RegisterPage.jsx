@@ -20,14 +20,18 @@ export const RegisterPage = () => {
         })
     }
 
+    const resetForm = () => {
+        setUsername('')
+        setPassword('')
+    }
+
     const registerUser = (user) => {
         mySystem.register(
             user,
             () => navigate("/login?ok=true"),
             () => {
                 setErrorMsg('User already exists!')
-                setUsername('')
-                setPassword('')
+                resetForm();
             }
         )
     }
@@ -65,6 +69,7 @@ export const RegisterPage = () => {
                 <div>
                     <button type="submit">Sign up</button>
                 </div>
+
                 <div>
                     <Link to="/login">Sign In</Link>
                 </div>

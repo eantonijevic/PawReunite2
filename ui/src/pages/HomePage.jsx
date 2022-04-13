@@ -18,6 +18,8 @@ export const HomePage = () => {
 
     const signOut = () => {
         auth.removeToken();
+
+        //TODO falta llamar al server
         navigate("/");
     }
 
