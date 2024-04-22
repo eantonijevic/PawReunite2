@@ -20,7 +20,7 @@ public class Routes {
 
     public static final String REGISTER_ROUTE = "/register";
 
-    public static final String REGISTERPET_ROUTE = "/registerpets";
+    public static final String REGISTERPET_ROUTE = "/registerpet";
     public static final String AUTH_ROUTE = "/auth";
     public static final String USERS_ROUTE = "/users";
 
@@ -96,7 +96,7 @@ public class Routes {
             return res.body();
         });
 
-        authorizedDelete(USER_ROUTE, (req, res) -> {
+        authorizedDelete(USERS_ROUTE, (req, res) -> {
             getUser(req).ifPresent(user -> {
                 boolean deleted = system.deleteUser(user.getEmail());
                 if (deleted) {

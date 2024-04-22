@@ -29,20 +29,24 @@ function LostPetRegister() {
                 // Registration successful
                 console.log('Lost pet registered successfully');
                 // Additional code to handle success, e.g., show a success message
+                resetForm();
             },
             () => {
                 // Registration failed
                 console.error('Failed to register lost pet');
                 // Additional code to handle failure, e.g., show an error message
+                resetForm();
             }
         );
+    };
 
+    const resetForm = () => {
         // Clear the form inputs
         setId('');
         setName('');
         setSpecies('');
         setUserEmail('');
-    };
+    }
 
     const handleIdChange = (event) => {
         setId(event.target.value);
@@ -70,7 +74,7 @@ function LostPetRegister() {
                         <input type="name"
                                value={name}
                                placeholder="Jerry"
-                               name="mail"
+                               name="name"
                                onChange={handleNameChange} />
                     </label>
                 </div>
@@ -87,7 +91,11 @@ function LostPetRegister() {
                 <div>
                     <label>
                         User Email (optional):
-                        <input type="text" value={userEmail} onChange={handleUserEmailChange} />
+                        <input type="email"
+                               placeholder="name@example.com"
+                               value={userEmail}
+                               name="userEmail"
+                               onChange={handleUserEmailChange} />
                     </label>
                 </div>
                 <div>

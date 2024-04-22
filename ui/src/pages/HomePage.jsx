@@ -36,13 +36,7 @@ export const HomePage = () => {
         fetchLostPets();
     }, []);
 
-    const signOut = async () => {
-        try {
-            // Make a server call to delete the user
-            await mySystem.deleteUser(token);
-        } catch (error) {
-            // Handle error
-        }
+    const signOut = () => {
         auth.removeToken();
         navigate('/');
     };

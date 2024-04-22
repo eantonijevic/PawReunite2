@@ -18,7 +18,7 @@ const MySystem = {
     },
 
     register: (user, okCallback, errorCallback) => {
-        fetch('http://localhost:4321/register', {
+        fetch(`${restApiEndpoint}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,7 +34,7 @@ const MySystem = {
     },
 
     listUsers: (token, okCallback, errorCallback) => {
-        fetch('http://localhost:4321/users', {
+        fetch(`${restApiEndpoint}/users`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const MySystem = {
     },
 
     registerpet: (lostPet, okCallback, errorCallback) => {
-        fetch('http://localhost:4321/registerpets', {
+        fetch(`${restApiEndpoint}/registerpet`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ const MySystem = {
     },
 
     listLostPets: (token, okCallback, errorCallback) => {
-        fetch('http://localhost:4321/lostpets', {
+        fetch(`${restApiEndpoint}/lostpets`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
