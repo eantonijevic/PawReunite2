@@ -47,8 +47,56 @@ const MySystem = {
                 errorCallback()
             }
         })
-    }
-}
+    },
+
+    deleteUser: (token, okCallback, errorCallback) => {
+        fetch(`${restApiEndpoint}/users`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(resp => {
+            if (resp.status === 204) {
+                okCallback();
+            } else {
+                errorCallback();
+            }
+        });
+    },
+
+    registerpet: (lostPet, okCallback, errorCallback) => {
+        fetch('http://localhost:4321/registerpets', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(lostPet)
+        }).then(resp => {
+            if (resp.status === 201) {
+                okCallback()
+            } else {
+                errorCallback()
+            }
+        })
+    },
+
+    listLostPets: (token, okCallback, errorCallback) => {
+        fetch('http://localhost:4321/lostpets', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(resp => {
+            if (resp.status === 200) {
+                resp.json().then(lostPets => okCallback(lostPets))
+            } else {
+                errorCallback()
+            }
+        })
+    },
+};
 
 const useMySystem = () => MySystem
 

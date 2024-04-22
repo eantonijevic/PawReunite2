@@ -11,6 +11,7 @@ export const HomePage = () => {
     const token = auth.getToken();
     const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
+    const [lostPets, setLostPets] = useState([]);
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -22,7 +23,17 @@ export const HomePage = () => {
             }
         };
 
+        const fetchLostPets = async () => {
+            try {
+                const pets = await mySystem.getLostPets();
+                setLostPets(pets);
+            } catch (error) {
+                // Handle error
+            }
+        };
+
         fetchCurrentUser();
+        fetchLostPets();
     }, []);
 
     const signOut = async () => {
@@ -38,10 +49,12 @@ export const HomePage = () => {
 
     const deleteAccount = async () => {
         try {
-            // Make a server call to delete the user account
-            await mySystem.deleteUser(token);
-            auth.removeToken();
-            navigate('/');
+            await mySystem.deleteUser(token, () => {
+                auth.removeToken();
+                navigate('/');
+            }, () => {
+                // Handle error
+            });
         } catch (error) {
             // Handle error
         }
@@ -74,6 +87,10 @@ export const HomePage = () => {
     const goToCreateChat = () => {
         navigate('/create-chat');
     };
+
+    const currentUserEmail = currentUser ? currentUser.email : '';
+
+    const userLostPets = lostPets.filter(pet => pet.userEmail === currentUserEmail);
 
     return (
         <div className="container">
@@ -139,12 +156,20 @@ export const HomePage = () => {
                 </ul>
             </div>
 
-                <li>
-                    <button type="button" onClick={deleteAccount}>
-                        Delete Account
-                    </button>
-                </li>
+            <div className="container">
+                <h1>Lost Pets</h1>
+                <ul>
+                    {userLostPets.map((pet) => (
+                        <li key={pet.id}>{pet.name}</li>
+                    ))}
+                </ul>
+            </div>
 
+            <div className="container">
+                <button type="button" onClick={deleteAccount}>
+                    Delete Account
+                </button>
+            </div>
 
             <footer className="footer">
                 <p>Footer</p>

@@ -1,9 +1,52 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router';
+import { useMySystem } from '../service/mySystem';
 
 function LostPetRegister() {
+    const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [species, setSpecies] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const navigate = useNavigate();
+    const mySystem = useMySystem();
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        // Create a new Lost Pet object with the entered details
+        const lostPet = {
+            id: id,
+            name: name,
+            species: species,
+            userEmail: userEmail !== '' ? userEmail : null,
+        };
+
+        // Send the lostPet object to the server for registration
+        mySystem.registerpet(
+            lostPet,
+            () => {
+                // Registration successful
+                console.log('Lost pet registered successfully');
+                // Additional code to handle success, e.g., show a success message
+            },
+            () => {
+                // Registration failed
+                console.error('Failed to register lost pet');
+                // Additional code to handle failure, e.g., show an error message
+            }
+        );
+
+        // Clear the form inputs
+        setId('');
+        setName('');
+        setSpecies('');
+        setUserEmail('');
+    };
+
+    const handleIdChange = (event) => {
+        setId(event.target.value);
+    };
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -17,39 +60,6 @@ function LostPetRegister() {
         setUserEmail(event.target.value);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        // Create a new Lost Pet object with the entered details
-        const lostPet = {
-            name: name,
-            species: species,
-            userEmail: userEmail !== '' ? userEmail : null,
-        };
-
-        // Send the lostPet object to the server for registration
-        registerLostPet(lostPet);
-
-        // Clear the form inputs
-        setName('');
-        setSpecies('');
-        setUserEmail('');
-    };
-
-    const registerLostPet = (lostPet) => {
-        // Send an HTTP request to your server to register the lost pet
-        // You can use libraries like axios or fetch for this purpose
-        // Example:
-        // axios.post('/api/lost-pets', lostPet)
-        //   .then(response => {
-        //     // Handle the response
-        //   })
-        //   .catch(error => {
-        //     // Handle the error
-        //   })
-        console.log('Registering Lost Pet:', lostPet);
-    };
-
     return (
         <div>
             <h2>Register a Lost Pet</h2>
@@ -57,13 +67,21 @@ function LostPetRegister() {
                 <div>
                     <label>
                         Name:
-                        <input type="text" value={name} onChange={handleNameChange} />
+                        <input type="name"
+                               value={name}
+                               placeholder="Jerry"
+                               name="mail"
+                               onChange={handleNameChange} />
                     </label>
                 </div>
                 <div>
                     <label>
                         Species:
-                        <input type="text" value={species} onChange={handleSpeciesChange} />
+                        <input type="species"
+                               placeholder="Cat"
+                               name="species"
+                               value={species}
+                               onChange={handleSpeciesChange} />
                     </label>
                 </div>
                 <div>
@@ -76,6 +94,9 @@ function LostPetRegister() {
                     <button type="submit">Register Lost Pet</button>
                 </div>
             </form>
+            <div>
+                <Link to="/login">Sign In</Link>
+            </div>
         </div>
     );
 }

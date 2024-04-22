@@ -24,6 +24,15 @@ public class Users {
 
         return newUser;
     }
+    public boolean deleteUser(String email) {
+        Optional<User> optionalUser = findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            entityManager.remove(user);
+            return true;
+        }
+        return false;
+    }
 
     public boolean exists(String email) {
         return findByEmail(email).isPresent();

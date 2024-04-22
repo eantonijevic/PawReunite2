@@ -3,10 +3,7 @@ package lab1.rest;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lab1.rest.json.JsonParser;
-import lab1.rest.model.Auth;
-import lab1.rest.model.AuthRequest;
-import lab1.rest.model.RegistrationUserForm;
-import lab1.rest.model.User;
+import lab1.rest.model.*;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -22,9 +19,15 @@ import static spark.Spark.*;
 public class Routes {
 
     public static final String REGISTER_ROUTE = "/register";
+
+    public static final String REGISTERPET_ROUTE = "/registerpets";
     public static final String AUTH_ROUTE = "/auth";
     public static final String USERS_ROUTE = "/users";
+
+    public static final String PETS_ROUTE = "/lostpets";
     public static final String USER_ROUTE = "/user";
+
+    public static final String PET_ROUTE = "/lostpet";
 
     private MySystem system;
 
@@ -76,15 +79,44 @@ public class Routes {
             return res.body();
         });
 
-        authorizedDelete(AUTH_ROUTE, (req, res) -> {
-            getToken(req)
-                    .ifPresentOrElse(token -> {
-                        emailByToken.invalidate(token);
-                        res.status(204);
-                    }, () -> {
-                        res.status(404);
-                    });
+        post(REGISTERPET_ROUTE, (req, res) -> {
+            final RegistrationPetForm form = RegistrationPetForm.createFromJson(req.body());
 
+            system.registerLostPet(form).ifPresentOrElse(
+                    (lostPet) -> {
+                        res.status(201);
+                        res.body("Lost Pet created");
+                    },
+                    () -> {
+                        res.status(409);
+                        res.body("Pet already exists");
+                    }
+            );
+
+            return res.body();
+        });
+
+        authorizedDelete(USER_ROUTE, (req, res) -> {
+            getUser(req).ifPresent(user -> {
+                boolean deleted = system.deleteUser(user.getEmail());
+                if (deleted) {
+                    res.status(204);
+                } else {
+                    res.status(404);
+                }
+            });
+            return "";
+        });
+
+        authorizedDelete(PET_ROUTE, (req, res) -> {
+            getLostPet(req).ifPresent(lostPet -> {
+                boolean deleted = system.deleteLostPet(lostPet.getName());
+                if (deleted) {
+                    res.status(204);
+                } else {
+                    res.status(404);
+                }
+            });
             return "";
         });
 
@@ -93,8 +125,18 @@ public class Routes {
             return JsonParser.toJson(users);
         });
 
+        authorizedGet(PETS_ROUTE, (req, res) -> {
+            final List<LostPet> lostPets = system.listLostPets();
+            return JsonParser.toJson(lostPets);
+        });
+
         authorizedGet(USER_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
         authorizedGet(USER_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
+
+        authorizedGet(PET_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
+        authorizedGet(PET_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
+
+
     }
 
     private void authorizedGet(final String path, final Route route) {
@@ -120,7 +162,18 @@ public class Routes {
                 .flatMap(email -> system.findUserByEmail(email));
     }
 
+    private Optional<LostPet> getLostPet(Request req) {
+        return getToken(req)
+                .map(nameByToken::getIfPresent)
+                .flatMap(name -> system.findLostPetByName(name));
+    }
+
+
     private final Cache<String, String> emailByToken = CacheBuilder.newBuilder()
+            .expireAfterAccess(30, MINUTES)
+            .build();
+
+    private final Cache<String, String> nameByToken = CacheBuilder.newBuilder()
             .expireAfterAccess(30, MINUTES)
             .build();
 

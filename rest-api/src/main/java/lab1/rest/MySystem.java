@@ -1,7 +1,10 @@
 package lab1.rest;
 
+import lab1.rest.model.LostPet;
+import lab1.rest.model.RegistrationPetForm;
 import lab1.rest.model.RegistrationUserForm;
 import lab1.rest.model.User;
+import lab1.rest.persistence.LostPets;
 import lab1.rest.persistence.Users;
 
 import javax.persistence.EntityManager;
@@ -37,9 +40,28 @@ public class MySystem {
         );
     }
 
+    public Optional<LostPet> findLostPetByName(String name) {
+        return runInTransaction(
+                ds -> ds.lostPets().findByName(name)
+        );
+    }
+
     public List<User> listUsers() {
         return runInTransaction(
                 ds -> ds.users().list()
+        );
+    }
+
+    public Optional<LostPet> registerLostPet(RegistrationPetForm form) {
+        return runInTransaction(datasource -> {
+            final LostPets lostpets = datasource.lostPets();
+            return lostpets.exists(form.getName()) ? Optional.empty() : Optional.of(lostpets.createLostPet(form));
+        });
+    }
+
+    public List<LostPet> listLostPets() {
+        return runInTransaction(
+                ds -> ds.lostPets().list()
         );
     }
 
@@ -66,4 +88,19 @@ public class MySystem {
         // Super dummy implementation. Zero security
         return foundUser.getPassword().equals(password);
     }
+
+    public boolean deleteUser(String email) {
+        return runInTransaction(datasource -> {
+            final Users users = datasource.users();
+            return users.deleteUser(email);
+        });
+    }
+
+    public boolean deleteLostPet(String name) {
+        return runInTransaction(datasource -> {
+        final LostPets lostPets = datasource.lostPets();
+        return lostPets.deleteLostPet(name);
+    });
+    }
 }
+
