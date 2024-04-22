@@ -3,7 +3,7 @@ package lab1.rest.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "LOSTPET")
+@Table(name = "LostPet")
 public class LostPet {
 
     @Id

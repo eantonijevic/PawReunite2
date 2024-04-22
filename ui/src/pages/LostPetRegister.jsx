@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router';
 import { useMySystem } from '../service/mySystem';
 
 function LostPetRegister() {
-    const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [species, setSpecies] = useState('');
     const [userEmail, setUserEmail] = useState('');
@@ -16,7 +15,6 @@ function LostPetRegister() {
 
         // Create a new Lost Pet object with the entered details
         const lostPet = {
-            id: id,
             name: name,
             species: species,
             userEmail: userEmail !== '' ? userEmail : null,
@@ -42,15 +40,10 @@ function LostPetRegister() {
 
     const resetForm = () => {
         // Clear the form inputs
-        setId('');
         setName('');
         setSpecies('');
         setUserEmail('');
     }
-
-    const handleIdChange = (event) => {
-        setId(event.target.value);
-    };
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -73,7 +66,7 @@ function LostPetRegister() {
                         Name:
                         <input type="name"
                                value={name}
-                               placeholder="Jerry"
+                               placeholder="Tom"
                                name="name"
                                onChange={handleNameChange} />
                     </label>

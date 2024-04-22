@@ -8,6 +8,7 @@ import lab1.rest.model.User;
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class LostPets {
 
@@ -18,8 +19,9 @@ public class LostPets {
     }
 
     public LostPet createLostPet(RegistrationPetForm signUpValues) {
+        final String id = UUID.randomUUID().toString(); // Generate a unique ID
         final LostPet newLostPet = LostPet.create(
-                signUpValues.getId(),
+                id,
                 signUpValues.getName(),
                 signUpValues.getSpecies(),
                 signUpValues.getUserEmail()
