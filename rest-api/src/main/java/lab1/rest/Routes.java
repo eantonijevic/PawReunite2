@@ -125,7 +125,7 @@ public class Routes {
             return JsonParser.toJson(users);
         });
 
-        authorizedGet(PETS_ROUTE, (req, res) -> {
+        get(PETS_ROUTE, (req, res) -> {
             final List<LostPet> lostPets = system.listLostPets();
             return JsonParser.toJson(lostPets);
         });

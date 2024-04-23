@@ -86,7 +86,6 @@ const MySystem = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
             }
         }).then(resp => {
             if (resp.status === 200) {

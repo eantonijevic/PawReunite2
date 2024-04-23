@@ -73,5 +73,4 @@ export const LoginPage = () => {
             </form>
             <Link to="/register">Sign up</Link>
         </div>
-    )
-}
+    )}

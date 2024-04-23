@@ -8,3 +8,8 @@
 .button-container {
     margin-top: 10px;
 }
+
+input[type="text"] {
+    width: 250px; /* Adjust the width as needed */
+    padding: 5px;
+}

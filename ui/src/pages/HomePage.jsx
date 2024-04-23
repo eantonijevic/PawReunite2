@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import {useLocation, useNavigate} from 'react-router';
 import { useAuthProvider } from '../auth/auth';
 import { useMySystem } from '../service/mySystem';
 
@@ -13,27 +13,20 @@ export const HomePage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [lostPets, setLostPets] = useState([]);
 
+
     useEffect(() => {
-        const fetchCurrentUser = async () => {
-            try {
-                const user = await mySystem.getCurrentUser(token);
-                setCurrentUser(user);
-            } catch (error) {
-                // Handle error
+        mySystem.listLostPets(
+            token,
+            (lostPets) => {
+                // Filter the lost pets based on the userEmail
+                const filteredLostPets = lostPets.filter(pet => pet.userEmail === currentUserEmail);
+                // Update the pets state with the filtered data
+                setLostPets(filteredLostPets);
+            },
+            (error) => {
+                console.error("Error retrieving lost pets:", error);
             }
-        };
-
-        const fetchLostPets = async () => {
-            try {
-                const pets = await mySystem.getLostPets();
-                setLostPets(pets);
-            } catch (error) {
-                // Handle error
-            }
-        };
-
-        fetchCurrentUser();
-        fetchLostPets();
+        );
     }, []);
 
     const signOut = () => {
@@ -101,7 +94,7 @@ export const HomePage = () => {
             </nav>
 
             <div className="container">
-                <h1>Users</h1>
+                <h1>User</h1>
                 <ul>
                     {users.map((user) => (
                         <li key={user.email}>{user.email}</li>
@@ -154,7 +147,11 @@ export const HomePage = () => {
                 <h1>Lost Pets</h1>
                 <ul>
                     {userLostPets.map((pet) => (
-                        <li key={pet.id}>{pet.name}</li>
+                        <li key={pet.id}>
+                            {pet.name}
+                            <br />
+                            {pet.species}
+                        </li>
                     ))}
                 </ul>
             </div>
