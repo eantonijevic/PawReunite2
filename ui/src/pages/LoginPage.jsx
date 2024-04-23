@@ -21,14 +21,15 @@ export const LoginPage = () => {
         mySystem.login(
             credentials,
             (token) => {
-                setToken(token)
-                navigate("/home", {replace: true});
+                setToken(token);
+                navigate(`/home?username=${credentials.email}`, { replace: true });
             },
             (msg) => {
-                setErrorMsg(msg)
-                setUsername('')
-                setPassword('')
-            })
+                setErrorMsg(msg);
+                setUsername('');
+                setPassword('');
+            }
+        );
     }
 
     const handleSubmit = async e => {

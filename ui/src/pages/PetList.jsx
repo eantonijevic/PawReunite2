@@ -8,6 +8,7 @@ import { useAuthProvider } from '../auth/auth';
 function PetList() {
     const [pets, setPets] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [comments, setComments] = useState({});
     const navigate = useNavigate();
     const mySystem = useMySystem();
     const auth = useAuthProvider();
@@ -37,9 +38,15 @@ function PetList() {
         setSearchQuery(event.target.value);
     };
 
+    const handleCommentsClick = (pet) => {
+        // Logic to handle the "Comments" button click
+        // For example, you can navigate to a separate page or display a modal for adding comments
+        console.log(`Add comments for pet: ${pet.name}`);
+    };
+
     // Filter the pets based on the search query
     const filteredPets = pets.filter((pet) => {
-        const { name, species, userEmail } = pet;
+        const {name, species, userEmail} = pet;
         const query = searchQuery.toLowerCase();
 
         return (
@@ -68,12 +75,15 @@ function PetList() {
                     filteredPets.map((pet) => (
                         <div key={pet.id} className="pet-container">
                             <strong>Name:</strong> {pet.name}
-                            <br />
+                            <br/>
                             <strong>Species:</strong> {pet.species}
-                            <br />
+                            <br/>
                             <strong>User Email:</strong> {pet.userEmail || 'N/A'}
                             <div className="button-container">
                                 <button onClick={() => handleKnowPetClick(pet)}>I know this Pet!</button>
+                            </div>
+                            <div className="button-container">
+                                <button onClick={() => handleCommentsClick(pet)}>Comments</button>
                             </div>
                         </div>
                     ))
@@ -89,5 +99,4 @@ function PetList() {
         </div>
     );
 }
-
 export default PetList;

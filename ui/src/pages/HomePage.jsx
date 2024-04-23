@@ -9,19 +9,18 @@ export const HomePage = () => {
     const auth = useAuthProvider();
 
     const token = auth.getToken();
-    const [users, setUsers] = useState([]);
-    const [currentUser, setCurrentUser] = useState(null);
     const [lostPets, setLostPets] = useState([]);
+
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const username = searchParams.get('username');
 
 
     useEffect(() => {
         mySystem.listLostPets(
             token,
             (lostPets) => {
-                // Filter the lost pets based on the userEmail
-                const filteredLostPets = lostPets.filter(pet => pet.userEmail === currentUserEmail);
-                // Update the pets state with the filtered data
-                setLostPets(filteredLostPets);
+                setLostPets(lostPets);
             },
             (error) => {
                 console.error("Error retrieving lost pets:", error);
@@ -35,24 +34,33 @@ export const HomePage = () => {
     };
 
     const deleteAccount = async () => {
-        try {
-            await mySystem.deleteUser(token, () => {
-                auth.removeToken();
-                navigate('/');
-            }, () => {
+        const confirmed = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
+
+        if (confirmed) {
+            try {
+                await mySystem.deleteUser(token, () => {
+                    auth.removeToken();
+                    navigate('/');
+                }, () => {
+                    // Handle error
+                });
+            } catch (error) {
                 // Handle error
-            });
-        } catch (error) {
-            // Handle error
+            }
         }
     };
 
+    const handleEditPet = (petId) => {
+        // Redirect the user to the edit pet page, passing the petId as a query parameter
+        navigate(`/edit-pet?petId=${petId}`);
+    };
+
     const goToRegisterLostPet = () => {
-        navigate('/register-lost-pet');
+        navigate('/lost-pet');
     };
 
     const goToSearchFlyers = () => {
-        navigate('/search-flyers');
+        navigate('/list');
     };
 
     const goToOwnFlyerMenu = () => {
@@ -75,9 +83,35 @@ export const HomePage = () => {
         navigate('/create-chat');
     };
 
-    const currentUserEmail = currentUser ? currentUser.email : '';
+    const handleFoundPet = async (petId) => {
+        try {
+            await mySystem.deletePet(token, () => {
+                setLostPets(lostPets.filter(pet => pet.id !== petId));
+            }, () => {
+                // Handle error
+            });
+        } catch (error) {
+            // Handle error
+        }
+    };
 
-    const userLostPets = lostPets.filter(pet => pet.userEmail === currentUserEmail);
+    const userLostPets = lostPets.filter(pet => pet.userEmail === username);
+
+    const handleDeletePet = async (petId) => {
+        try {
+            await mySystem.deletePet(
+                token,
+                () => {
+                    setLostPets(lostPets.filter((pet) => pet.id !== petId));
+                },
+                (error) => {
+                    console.error('Error deleting pet:', error);
+                }
+            );
+        } catch (error) {
+            console.error('Error deleting pet:', error);
+        }
+    };
 
     return (
         <div className="container">
@@ -96,9 +130,7 @@ export const HomePage = () => {
             <div className="container">
                 <h1>User</h1>
                 <ul>
-                    {users.map((user) => (
-                        <li key={user.email}>{user.email}</li>
-                    ))}
+                        <li>{username}</li>
                 </ul>
             </div>
 
@@ -151,6 +183,13 @@ export const HomePage = () => {
                             {pet.name}
                             <br />
                             {pet.species}
+                            <br /><button type="button" onClick={() => handleEditPet(pet.id)}>
+                            Edit Pet
+                            </button>
+                            <button type="button" onClick={() => handleDeletePet(pet.id)}>
+                                Delete Pet
+                            </button>
+
                         </li>
                     ))}
                 </ul>

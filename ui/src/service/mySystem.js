@@ -65,6 +65,22 @@ const MySystem = {
         });
     },
 
+    deletePet: (token, okCallback, errorCallback) => {
+        fetch(`${restApiEndpoint}/lostpets`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(resp => {
+            if (resp.status === 204) {
+                okCallback();
+            } else {
+                errorCallback();
+            }
+        });
+    },
+
     registerpet: (lostPet, okCallback, errorCallback) => {
         fetch(`${restApiEndpoint}/registerpet`, {
             method: 'POST',
@@ -79,6 +95,39 @@ const MySystem = {
                 errorCallback()
             }
         })
+    },
+
+    getPet: (token, petId, okCallback, errorCallback) => {
+        fetch(`${restApiEndpoint}/pets/${petId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(resp => {
+            if (resp.status === 200) {
+                resp.json().then(pet => okCallback(pet));
+            } else {
+                errorCallback();
+            }
+        }).catch(e => errorCallback("Unable to connect to My System API"));
+    },
+
+    updatePet: (token, pet, okCallback, errorCallback) => {
+        fetch(`${restApiEndpoint}/pets/${pet.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(pet)
+        }).then(resp => {
+            if (resp.status === 200) {
+                okCallback();
+            } else {
+                errorCallback();
+            }
+        }).catch(e => errorCallback("Unable to connect to My System API"));
     },
 
     listLostPets: (token, okCallback, errorCallback) => {

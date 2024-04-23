@@ -7,6 +7,7 @@ function LostPetRegister() {
     const [name, setName] = useState('');
     const [species, setSpecies] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [registrationStatus, setRegistrationStatus] = useState(null); // Track registration status
     const navigate = useNavigate();
     const mySystem = useMySystem();
 
@@ -25,14 +26,12 @@ function LostPetRegister() {
             lostPet,
             () => {
                 // Registration successful
-                console.log('Lost pet registered successfully');
-                // Additional code to handle success, e.g., show a success message
+                setRegistrationStatus('success'); // Set registration status to success
                 resetForm();
             },
             () => {
                 // Registration failed
-                console.error('Failed to register lost pet');
-                // Additional code to handle failure, e.g., show an error message
+                setRegistrationStatus('error'); // Set registration status to error
                 resetForm();
             }
         );
@@ -43,7 +42,7 @@ function LostPetRegister() {
         setName('');
         setSpecies('');
         setUserEmail('');
-    }
+    };
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -60,35 +59,47 @@ function LostPetRegister() {
     return (
         <div>
             <h2>Register a Lost Pet</h2>
+            {registrationStatus === 'success' && (
+                <div style={{ color: 'green' }}>Lost pet registered successfully!</div>
+            )}
+            {registrationStatus === 'error' && (
+                <div style={{ color: 'red' }}>Failed to register lost pet. Please try again.</div>
+            )}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>
                         Name:
-                        <input type="name"
-                               value={name}
-                               placeholder="Tom"
-                               name="name"
-                               onChange={handleNameChange} />
+                        <input
+                            type="name"
+                            value={name}
+                            placeholder="Tom"
+                            name="name"
+                            onChange={handleNameChange}
+                        />
                     </label>
                 </div>
                 <div>
                     <label>
                         Species:
-                        <input type="species"
-                               placeholder="Cat"
-                               name="species"
-                               value={species}
-                               onChange={handleSpeciesChange} />
+                        <input
+                            type="species"
+                            placeholder="Cat"
+                            name="species"
+                            value={species}
+                            onChange={handleSpeciesChange}
+                        />
                     </label>
                 </div>
                 <div>
                     <label>
                         User Email (optional):
-                        <input type="email"
-                               placeholder="name@example.com"
-                               value={userEmail}
-                               name="userEmail"
-                               onChange={handleUserEmailChange} />
+                        <input
+                            type="email"
+                            placeholder="name@example.com"
+                            value={userEmail}
+                            name="userEmail"
+                            onChange={handleUserEmailChange}
+                        />
                     </label>
                 </div>
                 <div>

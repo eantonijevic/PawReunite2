@@ -108,7 +108,7 @@ public class Routes {
             return "";
         });
 
-        authorizedDelete(PET_ROUTE, (req, res) -> {
+        authorizedDelete(PETS_ROUTE, (req, res) -> {
             getLostPet(req).ifPresent(lostPet -> {
                 boolean deleted = system.deleteLostPet(lostPet.getName());
                 if (deleted) {
