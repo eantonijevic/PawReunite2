@@ -21,6 +21,10 @@ const NavBar = () => {
             <Link to="/vet-kennel" style={styles.navItem}>
                 <button style={styles.button_Setting}>Vet/Kennel</button>
             </Link>
+            <div style={styles.backgroundContainer}>
+                <img scr = {background} style={styles.backgroundImage} />
+            </div>
+
         </div>
     );
 };
@@ -41,10 +45,21 @@ const styles = {
         justifyContent: 'center',
         textDecoration: 'none',
     },
+    backgroundContainer: {
+        flex: 1,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: -1,
+    },
     backgroundImage: {
+        flex:1,
+        zIndex: -1,
         position: 'absolute',
         width: '100%',
-        height: '100%',
+        height: '9%',
         objectFit: 'cover',
     },
     navItem: {

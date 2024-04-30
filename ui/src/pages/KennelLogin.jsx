@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import * as  React from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMySystem } from '../service/mySystem';
 
 export const KennelLogin = () => {
+
     const [errorMsg, setErrorMsg] = useState(undefined);
+    /*muestra un error en cualquier fallo durante el logeo*/
     const navigate = useNavigate();
     const mySystem = useMySystem();
 
