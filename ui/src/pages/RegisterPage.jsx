@@ -68,10 +68,6 @@ export const RegisterPage = () => {
                 <div>
                     <button type="submit">Sign up</button>
                 </div>
-
-                <div>
-                    <Link to="/login">Sign In</Link>
-                </div>
             </form>
         </div>
     )

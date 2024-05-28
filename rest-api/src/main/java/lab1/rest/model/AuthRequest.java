@@ -7,6 +7,7 @@ import org.eclipse.jetty.util.UrlEncoded;
 import java.util.List;
 
 public class AuthRequest {
+    private int Id = new User().getId();
     private final String email;
     private final String password;
 
@@ -15,7 +16,7 @@ public class AuthRequest {
         this.password = password;
     }
 
-    public static AuthRequest create(List<String> email, List<String> password) {
+    public static AuthRequest create( List<String> email, List<String> password) {
         return new AuthRequest(email.get(0), password.get(0));
     }
 
@@ -23,11 +24,7 @@ public class AuthRequest {
         return JsonParser.fromJson(body, AuthRequest.class);
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
+    public String getPassword() {return password;}
+    public String getEmail() {return email;}
+    public int getId() {return Id;}
 }

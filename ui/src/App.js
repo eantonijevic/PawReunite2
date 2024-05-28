@@ -8,8 +8,10 @@ import { RequireAuth } from './components/RequireAuth';
 import LostPetRegister from './pages/LostPetRegister';
 import PetList from './pages/PetList';
 import NavBar from './components/NavBar';
-import {KennelLogin} from "./pages/KennelLogin";
+import {KennelPage} from "./pages/KennelPage";
+import {KennelRegister} from "./pages/KennelRegister";
 import {PetEdit} from "./pages/PetEdit"
+import {KennelLogin} from "./pages/KennelLogin";
 
 function App() {
     return (
@@ -21,8 +23,10 @@ function App() {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/lost-pet" element={<LostPetRegister />} />
                 <Route path="/list" element={<PetList />} />
-                <Route path="/vet-kennel" element={<KennelLogin />} />
+                <Route path="/vet-kennel" element={<KennelPage />} />
                 <Route path="/edit-pet" element={<PetEdit/>} />
+                <Route path="/new-association" element={<KennelRegister/>} />
+                <Route path="/existing-association" element={<KennelLogin/>} />
                 <Route
                     path="/home"
                     element={

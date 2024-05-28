@@ -3,10 +3,12 @@ package lab1.rest.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "KENNEL")
+@Table(name = "Client")
 public class Kennel {
 
     @Id
+    @GeneratedValue
+    private int id;
     private String email;
 
     private String password;
@@ -20,7 +22,7 @@ public class Kennel {
     public Kennel() {
     }
 
-    public Kennel(String email, String password, String name, String address, String phoneNumber) {
+    public Kennel(String email, String password, String name, String address, String phoneNumber,String type) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -28,8 +30,8 @@ public class Kennel {
         this.phoneNumber = phoneNumber;
     }
 
-    public static Kennel create(String email, String password, String name, String address, String phoneNumber) {
-        return new Kennel(email, password, name, address, phoneNumber);
+    public static Kennel create(int id, String email, String password, String name, String address, String phoneNumber,String type) {
+        return new Kennel(email, password, name, address, phoneNumber,type);
     }
 
     // Getters and Setters
@@ -73,4 +75,6 @@ public class Kennel {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public int getId() {return id;}
 }

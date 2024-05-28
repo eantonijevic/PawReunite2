@@ -1,30 +1,27 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import logo from '../assets/logo.jpg';
 import background from '../assets/fondotitulo.png';
 
+
 const NavBar = () => {
+    const navigate = useNavigate();
+
     return (
         <div style={styles.navBar}>
+            <div style={styles.backgroundContainer}>
+                <img src={background} style={styles.backgroundImage} alt="Background" />
+            </div>
             <Link to="/" style={styles.logoButton}>
                 <img src={logo} style={styles.logo} alt="Logo" />
             </Link>
-            <Link to="/login" style={styles.navItem}>
-                <button style={styles.button_Setting}>Registered User</button>
-            </Link>
-            <Link to="/list" style={styles.navItem}>
-                <button style={styles.button_Setting}>Lost Pet List</button>
-            </Link>
-            <Link to="/register" style={styles.navItem}>
-                <button style={styles.button_Setting}>Sign Up</button>
-            </Link>
-            <Link to="/vet-kennel" style={styles.navItem}>
-                <button style={styles.button_Setting}>Vet/Kennel</button>
-            </Link>
-            <div style={styles.backgroundContainer}>
-                <img scr = {background} style={styles.backgroundImage} />
-            </div>
 
+                <button style={styles.button_Setting} onClick={() => navigate("/login")}>Registered User</button>
+
+                <button style={styles.button_Setting} onClick={() => navigate("/list") } >Pet List</button>
+                <button style={styles.button_Setting} onClick={() =>navigate("/register")}>Sing Up </button>
+
+                <button style={styles.button_Setting} onClick={()=> navigate("/vet-Kennel")}>Vet/Kennel</button>
         </div>
     );
 };

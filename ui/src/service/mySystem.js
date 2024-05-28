@@ -33,6 +33,7 @@ const MySystem = {
         })
     },
 
+
     listUsers: (token, okCallback, errorCallback) => {
         fetch(`${restApiEndpoint}/users`, {
             method: 'GET',
@@ -143,6 +144,36 @@ const MySystem = {
                 errorCallback()
             }
         })
+    },
+    Kennel_create: (Kennel, okCallback, errorCallback) => {
+        fetch(`${restApiEndpoint}/Kennel_create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Kennel)
+        }).then(resp => {
+            if (resp.status === 201) {
+                okCallback()
+            } else {
+                errorCallback()
+            }
+        })
+    },
+    Kennel_login: (credentials, okCallback, errorCallback) => {
+        fetch(`${restApiEndpoint}/auth`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(credentials)
+        }).then(resp => {
+            if (resp.status === 201) {
+                resp.json().then(body => okCallback(body))
+            } else {
+                errorCallback("Invalid user or password")
+            }
+        }).catch(e => errorCallback("Unable to connect to My System API"))
     },
 };
 

@@ -19,6 +19,7 @@ import static spark.Spark.*;
 public class Routes {
 
     public static final String REGISTER_ROUTE = "/register";
+    public static final String Kennel_create_ROUTE = "/Kennel_create";
 
     public static final String REGISTERPET_ROUTE = "/registerpet";
     public static final String AUTH_ROUTE = "/auth";
@@ -137,6 +138,23 @@ public class Routes {
         authorizedGet(PET_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
 
 
+        post(Kennel_create_ROUTE, (req, res) -> {
+            final RegistrationKennelForm form = RegistrationKennelForm.createFromJson(req.body());
+
+            system.registerKennel(form).ifPresentOrElse(
+                    (kennel) -> {
+                        res.status(201);
+                        res.body("Assosiation create susessfuly");
+                    },
+                    () -> {
+                        res.status(409);
+                        res.body("Assosiation existing");
+                    }
+            );
+
+            return res.body();
+        });
+
     }
 
     private void authorizedGet(final String path, final Route route) {
@@ -178,7 +196,7 @@ public class Routes {
             .build();
 
     private Optional<String> authenticate(AuthRequest req) {
-        return system.findUserByEmail(req.getEmail()).flatMap(foundUser -> {
+        return system.findUserById(req.getId()).flatMap(foundUser -> {
             if (system.validPassword(req.getPassword(), foundUser)) {
                 final String token = UUID.randomUUID().toString();
                 emailByToken.put(token, foundUser.getEmail());
@@ -188,6 +206,7 @@ public class Routes {
             }
         });
     }
+
 
     private boolean isAuthorized(Request request) {
         return getToken(request).map(this::isAuthenticated).orElse(false);

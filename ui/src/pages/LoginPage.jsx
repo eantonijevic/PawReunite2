@@ -28,6 +28,7 @@ export const LoginPage = () => {
                 setErrorMsg(msg);
                 setUsername('');
                 setPassword('');
+                setSearchParams('');
             }
         );
     }
@@ -35,7 +36,6 @@ export const LoginPage = () => {
     const handleSubmit = async e => {
         e.preventDefault();
         await loginUser({
-
             email: username,
             password: password
         })

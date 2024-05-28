@@ -3,7 +3,10 @@ package lab1.rest;
 import lab1.rest.model.LostPet;
 import lab1.rest.model.RegistrationPetForm;
 import lab1.rest.model.RegistrationUserForm;
+import lab1.rest.model.RegistrationKennelForm;
 import lab1.rest.model.User;
+import lab1.rest.model.Kennel;
+import lab1.rest.persistence.Kennels;
 import lab1.rest.persistence.LostPets;
 import lab1.rest.persistence.Users;
 
@@ -33,10 +36,22 @@ public class MySystem {
             return users.exists(form.getEmail()) ? Optional.empty() : Optional.of(users.createUser(form));
         });
     }
+    public Optional<Kennel> registerKennel(RegistrationKennelForm form) {
+        return runInTransaction(datasource -> {
+            final Kennels kennels = datasource.kennels();
+            return kennels.exists(form.getEmail()) ? Optional.empty() : Optional.of(kennels.createKennel(form));
+        });
+    }
 
     public Optional<User> findUserByEmail(String email) {
         return runInTransaction(
                 ds -> ds.users().findByEmail(email)
+        );
+    }
+
+    public Optional<User> findUserById(int id) {
+        return runInTransaction(
+                ds -> ds.users().findById(id)
         );
     }
 
@@ -101,6 +116,12 @@ public class MySystem {
         final LostPets lostPets = datasource.lostPets();
         return lostPets.deleteLostPet(name);
     });
+    }
+    public boolean deleteKennel(int id) {
+        return runInTransaction(datasource -> {
+            final Kennels kennels = datasource.kennels();
+            return kennels.deleteKennel(id);
+        });
     }
 }
 

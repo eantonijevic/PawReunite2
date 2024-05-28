@@ -16,7 +16,7 @@ public class Users {
     }
 
     public User createUser(RegistrationUserForm signUpValues) {
-        final User newUser = User.create(signUpValues.getEmail(), signUpValues.getPassword());
+        final User newUser = User.create(signUpValues.getId(),signUpValues.getName(), signUpValues.getEmail(), signUpValues.getPassword(),signUpValues.getType());
 
         if (exists(newUser.getEmail())) throw new IllegalStateException("User already exists.");
 
@@ -41,6 +41,11 @@ public class Users {
     public Optional<User> findByEmail(String email) {
         return entityManager.createQuery("SELECT u FROM User u WHERE u.email LIKE :email", User.class)
                 .setParameter("email", email).getResultList().stream()
+                .findFirst();
+    }
+    public Optional<User> findById(int id) {
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.id LIKE :id", User.class)
+                .setParameter("id", id).getResultList().stream()
                 .findFirst();
     }
 
