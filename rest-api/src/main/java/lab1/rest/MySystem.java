@@ -33,7 +33,7 @@ public class MySystem {
     public Optional<User> registerUser(RegistrationUserForm form) {
         return runInTransaction(datasource -> {
             final Users users = datasource.users();
-            return users.exists(form.getEmail()) ? Optional.empty() : Optional.of(users.createUser(form));
+            return users.exists(form.getId()) ? Optional.empty() : Optional.of(users.createUser(form));
         });
     }
     public Optional<Kennel> registerKennel(RegistrationKennelForm form) {
@@ -43,11 +43,11 @@ public class MySystem {
         });
     }
 
-    public Optional<User> findUserByEmail(String email) {
-        return runInTransaction(
-                ds -> ds.users().findByEmail(email)
-        );
-    }
+//    public Optional<User> findUserByEmail(String email) {
+//        return runInTransaction(
+//                ds -> ds.users().findByEmail(email)
+//        );
+//    }
 
     public Optional<User> findUserById(int id) {
         return runInTransaction(
@@ -104,10 +104,10 @@ public class MySystem {
         return foundUser.getPassword().equals(password);
     }
 
-    public boolean deleteUser(String email) {
+    public boolean deleteUser(int id) {
         return runInTransaction(datasource -> {
             final Users users = datasource.users();
-            return users.deleteUser(email);
+            return users.deleteUser(id);
         });
     }
 

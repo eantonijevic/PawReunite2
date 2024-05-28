@@ -99,7 +99,7 @@ public class Routes {
 
         authorizedDelete(USERS_ROUTE, (req, res) -> {
             getUser(req).ifPresent(user -> {
-                boolean deleted = system.deleteUser(user.getEmail());
+                boolean deleted = system.deleteUser(user.getId());
                 if (deleted) {
                     res.status(204);
                 } else {

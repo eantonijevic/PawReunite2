@@ -22,16 +22,16 @@ public class RegistrationUserForm {
     public String getPassword() {
         return password;
     }
-    public String getType() {
-        return type;
-    }
-
     public String getEmail() {
         return email;
     }
+
     public String getName() {
         return name;
     }
-
     public int getId() {return Id;}
+
+    public String getType() {
+        return type;
+    }
 }
