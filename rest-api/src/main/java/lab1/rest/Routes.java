@@ -26,9 +26,6 @@ public class Routes {
     public static final String USERS_ROUTE = "/users";
 
     public static final String PETS_ROUTE = "/lostpets";
-    public static final String USER_ROUTE = "/user";
-
-    public static final String PET_ROUTE = "/lostpet";
 
     private MySystem system;
 
@@ -131,13 +128,6 @@ public class Routes {
             return JsonParser.toJson(lostPets);
         });
 
-        authorizedGet(USER_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
-        authorizedGet(USER_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
-
-        authorizedGet(PET_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
-        authorizedGet(PET_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
-
-
         post(Kennel_create_ROUTE, (req, res) -> {
             final RegistrationKennelForm form = RegistrationKennelForm.createFromJson(req.body());
 
@@ -196,7 +186,7 @@ public class Routes {
             .build();
 
     private Optional<String> authenticate(AuthRequest req) {
-        return system.findUserById(req.getId()).flatMap(foundUser -> {
+        return system.findUserByEmail(req.getEmail()).flatMap(foundUser -> {
             if (system.validPassword(req.getPassword(), foundUser)) {
                 final String token = UUID.randomUUID().toString();
                 emailByToken.put(token, foundUser.getEmail());

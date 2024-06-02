@@ -99,7 +99,7 @@ const MySystem = {
     },
 
     getPet: (token, petId, okCallback, errorCallback) => {
-        fetch(`${restApiEndpoint}/pets/${petId}`, {
+        fetch(`${restApiEndpoint}/lostpets/${petId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
