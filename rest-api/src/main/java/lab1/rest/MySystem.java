@@ -123,5 +123,28 @@ public class MySystem {
             return kennels.deleteKennel(id);
         });
     }
+
+    public Optional<LostPet> findLostPetById(String petId) {
+        return runInTransaction(
+                ds -> ds.lostPets().findById(petId)
+        );
+    }
+
+    public Optional<LostPet> updateLostPet(String petId, RegistrationPetForm form) {
+        return runInTransaction(datasource -> {
+            final LostPets lostPets = datasource.lostPets();
+            final Optional<LostPet> existingPetOptional = lostPets.findById(petId);
+
+            if (existingPetOptional.isPresent()) {
+                LostPet existingPet = existingPetOptional.get();
+                existingPet.setName(form.getName());
+                existingPet.setSpecies(form.getSpecies());
+                existingPet.setUserEmail(form.getUserEmail());
+                return Optional.of(lostPets.updateLostPet(existingPet));
+            } else {
+                return Optional.empty();
+            }
+        });
+    }
 }
 

@@ -99,20 +99,36 @@ export const HomePage = () => {
 
     const handleDeletePet = async (petId) => {
         try {
+            // Optimistic update
+            setLostPets(lostPets.filter((pet) => pet.id !== petId));
+
+            // Make the API call to delete the pet
             await mySystem.deletePet(
                 token,
                 () => {
-                    setLostPets(lostPets.filter((pet) => pet.id !== petId));
+                    // Success callback
+                    console.log('Pet deleted successfully');
                 },
                 (error) => {
+                    // Error callback
                     console.error('Error deleting pet:', error);
+
+                    // Revert the optimistic update
+                    setLostPets([...lostPets, { id: petId }]);
+
+                    // Display an error message to the user
+                    alert('Failed to delete the pet. Please try again later.');
                 }
             );
         } catch (error) {
+            // Revert the optimistic update
+            setLostPets([...lostPets, { id: petId }]);
+
+            // Display an error message to the user
+            alert('An unexpected error occurred. Please try again later.');
             console.error('Error deleting pet:', error);
         }
     };
-
     return (
         <div className="container">
             <nav className="navbar navbar-default" role="navigation">

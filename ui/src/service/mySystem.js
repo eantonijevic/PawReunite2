@@ -115,7 +115,7 @@ const MySystem = {
     },
 
     updatePet: (token, pet, okCallback, errorCallback) => {
-        fetch(`${restApiEndpoint}/pets/${pet.id}`, {
+        fetch(`${restApiEndpoint}/lostpets/${pet.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

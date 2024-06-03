@@ -128,6 +128,31 @@ public class Routes {
             return JsonParser.toJson(lostPets);
         });
 
+        get("/lostpets/:petId", (req, res) -> {
+            String petId = req.params(":petId");
+            Optional<LostPet> lostPet = system.findLostPetById(petId);
+            if (lostPet.isPresent()) {
+                return JsonParser.toJson(lostPet.get());
+            } else {
+                res.status(404);
+                return "Pet not found";
+            }
+        });
+
+        put("/lostpets/:petId", (req, res) -> {
+            String petId = req.params(":petId");
+            final RegistrationPetForm form = RegistrationPetForm.createFromJson(req.body());
+
+            Optional<LostPet> updatedPet = system.updateLostPet(petId, form);
+            if (updatedPet.isPresent()) {
+                res.status(200);
+                return JsonParser.toJson(updatedPet.get());
+            } else {
+                res.status(404);
+                return "Pet not found";
+            }
+        });
+
         post(Kennel_create_ROUTE, (req, res) -> {
             final RegistrationKennelForm form = RegistrationKennelForm.createFromJson(req.body());
 

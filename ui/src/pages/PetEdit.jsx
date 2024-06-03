@@ -10,6 +10,7 @@ export const PetEdit = () => {
 
   const token = auth.getToken();
   const [pet, setPet] = useState(null);
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -17,37 +18,40 @@ export const PetEdit = () => {
 
   useEffect(() => {
     mySystem.getPet(
-      token,
-      petId,
-      (pet) => {
-        setPet(pet);
-      },
-      (error) => {
-        console.error('Error retrieving pet:', error);
-      }
+        token,
+        petId,
+        (pet) => {
+          setPet(pet);
+        },
+        (error) => {
+          console.error('Error retrieving pet:', error);
+        }
     );
   }, []);
 
   const handleSave = async () => {
     try {
       await mySystem.updatePet(
-        token,
-        pet,
-        () => {
-          navigate('/home');
-        },
-        (error) => {
-          console.error('Error updating pet:', error);
-        }
+          token,
+          pet,
+          () => {
+            setShowSuccessNotification(true);
+            setTimeout(() => {
+              setShowSuccessNotification(false);
+            }, 3000);
+          },
+          (error) => {
+            console.error('Error updating pet:', error);
+          }
       );
     } catch (error) {
       console.error('Error updating pet:', error);
     }
   };
 
-  const handleCancel = () => {
-    navigate('/home');
-  };
+    const handleCancel = () => {
+        navigate("/login?ok=true");
+    };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -62,39 +66,45 @@ export const PetEdit = () => {
   }
 
   return (
-    <div className="container">
-      <h1>Edit Pet</h1>
+      <div className="container">
+        <h1>Edit Pet</h1>
 
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={pet.name}
-          onChange={handleChange}
-        />
+        <div>
+          <label htmlFor="name">Name:</label>
+          <input
+              type="text"
+              id="name"
+              name="name"
+              value={pet.name}
+              onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="species">Species:</label>
+          <input
+              type="text"
+              id="species"
+              name="species"
+              value={pet.species}
+              onChange={handleChange}
+          />
+        </div>
+
+        {/* Add more fields as needed */}
+
+        <button type="button" onClick={handleSave}>
+          Save
+        </button>
+        <button type="button" onClick={handleCancel}>
+          Cancel
+        </button>
+
+        {showSuccessNotification && (
+            <div className="notification">
+              <p>Pet information updated successfully!</p>
+            </div>
+        )}
       </div>
-
-      <div>
-        <label htmlFor="species">Species:</label>
-        <input
-          type="text"
-          id="species"
-          name="species"
-          value={pet.species}
-          onChange={handleChange}
-        />
-      </div>
-
-      {/* Add more fields as needed */}
-
-      <button type="button" onClick={handleSave}>
-        Save
-      </button>
-      <button type="button" onClick={handleCancel}>
-        Cancel
-      </button>
-    </div>
   );
 };
