@@ -83,18 +83,6 @@ export const HomePage = () => {
         navigate('/create-chat');
     };
 
-    const handleFoundPet = async (petId) => {
-        try {
-            await mySystem.deletePet(token, () => {
-                setLostPets(lostPets.filter(pet => pet.id !== petId));
-            }, () => {
-                // Handle error
-            });
-        } catch (error) {
-            // Handle error
-        }
-    };
-
     const userLostPets = lostPets.filter(pet => pet.userEmail === username);
 
     const handleDeletePet = async (petId) => {
