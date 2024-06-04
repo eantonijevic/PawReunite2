@@ -66,20 +66,23 @@ const MySystem = {
         });
     },
 
-    deletePet: (token, okCallback, errorCallback) => {
-        fetch(`${restApiEndpoint}/lostpets`, {
+    deletePet: (token, petId, okCallback, errorCallback) => {
+        fetch(`${restApiEndpoint}/lostpets/${petId}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
             }
-        }).then(resp => {
-            if (resp.status === 204) {
-                okCallback();
-            } else {
-                errorCallback();
-            }
-        });
+        })
+            .then(resp => {
+                if (resp.ok) {
+                    okCallback();
+                } else {
+                    errorCallback(new Error(`HTTP ${resp.status} - ${resp.statusText}`));
+                }
+            })
+            .catch(error => {
+                errorCallback(error);
+            });
     },
 
     registerpet: (lostPet, okCallback, errorCallback) => {

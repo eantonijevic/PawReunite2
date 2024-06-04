@@ -86,4 +86,14 @@ public class LostPets {
 
         return pet;
     }
+
+    public boolean deleteLostPetbyId(String id) {
+        Optional<LostPet> optionalLostPet = findById(id);
+        if (optionalLostPet.isPresent()) {
+            LostPet lostpet = optionalLostPet.get();
+            entityManager.remove(lostpet);
+            return true;
+        }
+        return false;
+    }
 }

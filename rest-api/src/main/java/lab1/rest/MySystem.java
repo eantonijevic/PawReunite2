@@ -61,6 +61,7 @@ public class MySystem {
         );
     }
 
+
     public List<User> listUsers() {
         return runInTransaction(
                 ds -> ds.users().list()
@@ -116,6 +117,13 @@ public class MySystem {
         final LostPets lostPets = datasource.lostPets();
         return lostPets.deleteLostPet(name);
     });
+    }
+
+    public boolean deleteLostPetbyId(String id) {
+        return runInTransaction(datasource -> {
+            final LostPets lostPets = datasource.lostPets();
+            return lostPets.deleteLostPetbyId(id);
+        });
     }
     public boolean deleteKennel(int id) {
         return runInTransaction(datasource -> {

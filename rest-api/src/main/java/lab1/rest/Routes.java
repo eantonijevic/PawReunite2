@@ -106,15 +106,16 @@ public class Routes {
             return "";
         });
 
-        authorizedDelete(PETS_ROUTE, (req, res) -> {
-            getLostPet(req).ifPresent(lostPet -> {
-                boolean deleted = system.deleteLostPet(lostPet.getName());
+        delete("/lostpets/:petId", (req, res) -> {
+            getLostPetbyId(req).ifPresent(lostPet -> {
+                boolean deleted = system.deleteLostPetbyId(lostPet.getId());
                 if (deleted) {
                     res.status(204);
                 } else {
                     res.status(404);
                 }
             });
+            res.status(404);
             return "";
         });
 
@@ -200,6 +201,23 @@ public class Routes {
                 .map(nameByToken::getIfPresent)
                 .flatMap(name -> system.findLostPetByName(name));
     }
+
+    private Optional<LostPet> getLostPetbyId(Request req) {
+        String petId = req.params(":petId");
+        Optional<String> token = getToken(req);
+
+        if (token.isPresent()) {
+            String validToken = emailByToken.getIfPresent(token.get());
+            if (validToken == null) {
+                return Optional.empty();
+            }
+
+            return system.findLostPetById(petId);
+        } else {
+            return Optional.empty();
+        }
+    }
+
 
 
     private final Cache<String, String> emailByToken = CacheBuilder.newBuilder()
