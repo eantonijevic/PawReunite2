@@ -91,6 +91,16 @@ export const PetEdit = () => {
           />
         </div>
 
+          <div>
+              <label htmlFor="comment">Comment:</label>
+              <textarea
+                  id="comment"
+                  name="comment"
+                  value={pet.comment}
+                  onChange={handleChange}
+              />
+          </div>
+
         {/* Add more fields as needed */}
 
         <button type="button" onClick={handleSave}>

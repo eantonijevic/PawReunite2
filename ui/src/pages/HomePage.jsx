@@ -50,11 +50,6 @@ export const HomePage = () => {
         }
     };
 
-    const handleEditPet = (petId) => {
-        // Redirect the user to the edit pet page, passing the petId as a query parameter
-        navigate(`/edit-pet?petId=${petId}`);
-    };
-
     const goToRegisterLostPet = () => {
         navigate('/lost-pet');
     };
@@ -64,7 +59,7 @@ export const HomePage = () => {
     };
 
     const goToOwnFlyerMenu = () => {
-        navigate('/own-flyer-menu');
+        navigate(`/own-flyer-menu?username=${username}`, { replace: true });
     };
 
     const goToSavedFlyers = () => {
@@ -83,34 +78,7 @@ export const HomePage = () => {
         navigate('/create-chat');
     };
 
-    const userLostPets = lostPets.filter(pet => pet.userEmail === username);
 
-    const handleDeletePet = async (petId) => {
-        try {
-            // Remove the pet from the local state first
-            setLostPets(lostPets.filter((pet) => pet.id !== petId));
-
-            // Call the backend to delete the pet
-            await mySystem.deletePet(
-                token,
-                petId,
-                () => {
-                    // Callback for successful deletion
-                    console.log("Pet deleted successfully");
-                },
-                (error) => {
-                    // Callback for error in deletion
-                    console.error("Error deleting pet:", error);
-                    // Revert the optimistic update
-                    setLostPets([...lostPets, { id: petId }]);
-                }
-            );
-        } catch (error) {
-            console.error("Error deleting pet:", error);
-            // Revert the optimistic update
-            setLostPets([...lostPets, { id: petId }]);
-        }
-    };
 
     return (
         <div className="container">
@@ -171,26 +139,6 @@ export const HomePage = () => {
                             Create Chat and View Messages
                         </button>
                     </li>
-                </ul>
-            </div>
-
-            <div className="container">
-                <h1>Lost Pets</h1>
-                <ul>
-                    {userLostPets.map((pet) => (
-                        <li key={pet.id}>
-                            {pet.name}
-                            <br />
-                            {pet.species}
-                            <br /><button type="button" onClick={() => handleEditPet(pet.id)}>
-                            Edit Pet
-                            </button>
-                            <button type="button" onClick={() => handleDeletePet(pet.id)}>
-                                Delete Pet
-                            </button>
-
-                        </li>
-                    ))}
                 </ul>
             </div>
 

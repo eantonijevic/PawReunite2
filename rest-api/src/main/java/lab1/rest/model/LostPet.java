@@ -15,18 +15,21 @@ public class LostPet {
 
     private String userEmail;
 
+    private String comment;
+
     public LostPet() {
     }
 
-    public LostPet(String id, String name, String species, String userEmail) {
+    public LostPet(String id, String name, String species, String userEmail, String comment) {
         this.id = id;
         this.name = name;
         this.species = species;
         this.userEmail = userEmail;
+        this.comment = comment;
     }
 
-    public static LostPet create(String id, String name, String species, String userEmail) {
-        return new LostPet(id, name, species, userEmail);
+    public static LostPet create(String id, String name, String species, String userEmail, String comment) {
+        return new LostPet(id, name, species, userEmail, comment);
     }
 
     // Getters and setters
@@ -61,5 +64,13 @@ public class LostPet {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

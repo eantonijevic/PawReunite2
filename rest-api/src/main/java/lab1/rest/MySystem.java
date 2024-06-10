@@ -148,6 +148,7 @@ public class MySystem {
                 existingPet.setName(form.getName());
                 existingPet.setSpecies(form.getSpecies());
                 existingPet.setUserEmail(form.getUserEmail());
+                existingPet.setComment(form.getComment());
                 return Optional.of(lostPets.updateLostPet(existingPet));
             } else {
                 return Optional.empty();

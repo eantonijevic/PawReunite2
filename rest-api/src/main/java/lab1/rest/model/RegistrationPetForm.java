@@ -7,10 +7,13 @@ public class RegistrationPetForm {
     private final String species;
     private final String userEmail;
 
-    public RegistrationPetForm(String name, String species, String userEmail) {
+    private final String comment;
+
+    public RegistrationPetForm(String name, String species, String userEmail, String comment) {
         this.name = name;
         this.species = species;
         this.userEmail = userEmail;
+        this.comment = comment;
     }
 
     public static RegistrationPetForm createFromJson(String body) {
@@ -27,6 +30,10 @@ public class RegistrationPetForm {
 
     public String getUserEmail() {
         return userEmail;
+    }
+
+    public String getComment() {
+        return comment;
     }
 }
 

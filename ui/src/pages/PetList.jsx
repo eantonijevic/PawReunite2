@@ -8,53 +8,54 @@ import { useAuthProvider } from '../auth/auth';
 function PetList() {
     const [pets, setPets] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [comments, setComments] = useState({});
+    const [editedComment, setEditedComment] = useState('');
     const navigate = useNavigate();
     const mySystem = useMySystem();
     const auth = useAuthProvider();
     const token = auth.getToken();
+    const [updatedPet, setUpdatedPet] = useState(null);
+
 
     useEffect(() => {
         mySystem.listLostPets(
             token,
             (pets) => {
-                // On success, update the pets state with the received data
                 setPets(pets);
             },
             (error) => {
-                // On error, handle the error logic
                 console.error('Error retrieving lost pets:', error);
-                // You can also set an error state or display an error message to the user
             }
         );
     }, []);
-
-    const handleKnowPetClick = (pet) => {
-        // Handle the "I know this Pet!" button click for the specific pet
-        console.log(`You know the pet: ${pet.name}`);
-    };
 
     const handleSearch = (event) => {
         setSearchQuery(event.target.value);
     };
 
-    const handleCommentsClick = (pet) => {
-        // Logic to handle the "Comments" button click
-        // For example, you can navigate to a separate page or display a modal for adding comments
-        console.log(`Add comments for pet: ${pet.name}`);
+    const handleCommentUpdate = (pet) => {
+        const now = new Date().toLocaleString();
+        const updatedPet = {
+            ...pet,
+            comment: `${pet.comment || ''}\n\n[${now}] ${editedComment}`,
+        };
+
+        mySystem.updatePet(
+            token,
+            updatedPet,
+            () => {
+                console.log('Pet comment updated successfully!');
+                setEditedComment('');
+                setUpdatedPet(updatedPet); // Update the updatedPet state
+            },
+            (error) => {
+                console.error('Error updating pet comment:', error);
+            }
+        );
     };
 
-    // Filter the pets based on the search query
-    const filteredPets = pets.filter((pet) => {
-        const {name, species, userEmail} = pet;
-        const query = searchQuery.toLowerCase();
-
-        return (
-            name.toLowerCase().includes(query) ||
-            species.toLowerCase().includes(query) ||
-            userEmail.toLowerCase().includes(query)
-        );
-    });
+    const filteredPets = pets.map((pet) => (
+        pet.id === updatedPet?.id ? updatedPet : pet
+    ));
 
     return (
         <div>
@@ -75,15 +76,31 @@ function PetList() {
                     filteredPets.map((pet) => (
                         <div key={pet.id} className="pet-container">
                             <strong>Name:</strong> {pet.name}
-                            <br/>
+                            <br />
                             <strong>Species:</strong> {pet.species}
-                            <br/>
+                            <br />
                             <strong>User Email:</strong> {pet.userEmail || 'N/A'}
-                            <div className="button-container">
-                                <button onClick={() => handleKnowPetClick(pet)}>I know this Pet!</button>
+                            <br />
+                            <strong>Comment:</strong>
+                            <div className="comment-container">
+                                {pet.comment ? (
+                                    pet.comment.split('\n\n').map((line, index) => (
+                                        <div key={index} className="comment-line">
+                                            {line}
+                                        </div>
+                                    ))
+                                ) : (
+                                    'N/A'
+                                )}
                             </div>
                             <div className="button-container">
-                                <button onClick={() => handleCommentsClick(pet)}>Comments</button>
+                                <input
+                                    type="text"
+                                    placeholder="Add a new comment"
+                                    value={editedComment}
+                                    onChange={(e) => setEditedComment(e.target.value)}
+                                />
+                                <button onClick={() => handleCommentUpdate(pet)}>Add New Comment</button>
                             </div>
                         </div>
                     ))
@@ -91,12 +108,12 @@ function PetList() {
                     <p>No lost pets found.</p>
                 )}
             </div>
-
             <div>
-                <p>The lost pet you are looking for is not in the list.</p>
+                <p>If the lost pet you are looking for is not in the list...</p>
                 <Link to="/lost-pet">Register the Lost Pet</Link>
             </div>
         </div>
     );
 }
+
 export default PetList;
