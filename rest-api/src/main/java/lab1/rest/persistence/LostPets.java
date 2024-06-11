@@ -24,7 +24,8 @@ public class LostPets {
                 id,
                 signUpValues.getName(),
                 signUpValues.getSpecies(),
-                signUpValues.getUserEmail()
+                signUpValues.getUserEmail(),
+                signUpValues.getComment()
         );
 
         if (exists(newLostPet.getName())) {
@@ -59,5 +60,42 @@ public class LostPets {
     public List<LostPet> list() {
         return entityManager.createQuery("SELECT u FROM LostPet u", LostPet.class)
                 .getResultList();
+    }
+
+    public Optional<LostPet> findById(String id) {
+        return entityManager.createQuery("SELECT u FROM LostPet u WHERE u.id LIKE :id", LostPet.class)
+                .setParameter("id", id).getResultList().stream()
+                .findFirst();
+    }
+
+    public LostPet updateLostPet(LostPet existingPet) {
+        // First, find the existing pet in the database
+        LostPet pet = entityManager.find(LostPet.class, existingPet.getId());
+
+        // If the pet is not found, return null or throw an exception
+        if (pet == null) {
+            return null;
+        }
+
+        // Update the properties of the existing pet
+        pet.setName(existingPet.getName());
+        pet.setSpecies(existingPet.getSpecies());
+        pet.setUserEmail(existingPet.getUserEmail());
+        pet.setComment(existingPet.getComment());
+
+        // Persist the updated pet to the database
+        entityManager.persist(pet);
+
+        return pet;
+    }
+
+    public boolean deleteLostPetbyId(String id) {
+        Optional<LostPet> optionalLostPet = findById(id);
+        if (optionalLostPet.isPresent()) {
+            LostPet lostpet = optionalLostPet.get();
+            entityManager.remove(lostpet);
+            return true;
+        }
+        return false;
     }
 }

@@ -4,56 +4,82 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 import { useMySystem } from '../service/mySystem';
 import { useAuthProvider } from '../auth/auth';
+import useNotification from "../components/useNotification";
 
 function PetList() {
     const [pets, setPets] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [comments, setComments] = useState({});
+    const [editedComments, setEditedComments] = useState({});
     const navigate = useNavigate();
     const mySystem = useMySystem();
     const auth = useAuthProvider();
     const token = auth.getToken();
+    const [notification, showNotification] = useNotification();
+
+
 
     useEffect(() => {
         mySystem.listLostPets(
             token,
             (pets) => {
-                // On success, update the pets state with the received data
                 setPets(pets);
             },
             (error) => {
-                // On error, handle the error logic
                 console.error('Error retrieving lost pets:', error);
-                // You can also set an error state or display an error message to the user
             }
         );
     }, []);
-
-    const handleKnowPetClick = (pet) => {
-        // Handle the "I know this Pet!" button click for the specific pet
-        console.log(`You know the pet: ${pet.name}`);
-    };
 
     const handleSearch = (event) => {
         setSearchQuery(event.target.value);
     };
 
-    const handleCommentsClick = (pet) => {
-        // Logic to handle the "Comments" button click
-        // For example, you can navigate to a separate page or display a modal for adding comments
-        console.log(`Add comments for pet: ${pet.name}`);
+    function getEmail() {
+        return sessionStorage.getItem('email');
+    }
+
+    const handleCommentUpdate = (pet) => {
+        // Update the comment logic
+        const currentTimestamp = new Date().toLocaleString();
+        const userEmail = getEmail();
+        const updatedPet = {
+            ...pet,
+            comment: pet.comment ? `${pet.comment}\n\n${editedComments[pet.id]} (${userEmail ? `${userEmail} - ` : ''}${currentTimestamp})` : `${editedComments[pet.id]} (${userEmail ? `${userEmail} - ` : ''}${currentTimestamp})`,
+        };
+
+        mySystem.updatePet(
+            token,
+            updatedPet,
+            () => {
+                console.log('Pet comment updated successfully!');
+                setEditedComments({ ...editedComments, [pet.id]: '' });
+                showNotification(`Comment updated for pet: ${pet.name}`);
+
+                // Refresh the list of pets to show the updated comment
+                mySystem.listLostPets(
+                    token,
+                    (pets) => {
+                        setPets(pets);
+                    },
+                    (error) => {
+                        console.error('Error retrieving lost pets:', error);
+                    }
+                );
+            },
+            (error) => {
+                console.error('Error updating pet comment:', error);
+            }
+        );
     };
 
-    // Filter the pets based on the search query
-    const filteredPets = pets.filter((pet) => {
-        const {name, species, userEmail} = pet;
-        const query = searchQuery.toLowerCase();
+    const handleCommentChange = (petId, newComment) => {
+        setEditedComments({ ...editedComments, [petId]: newComment });
+    };
 
-        return (
-            name.toLowerCase().includes(query) ||
-            species.toLowerCase().includes(query) ||
-            userEmail.toLowerCase().includes(query)
-        );
+
+    const filteredPets = pets.filter((pet) => {
+        const searchText = `${pet.name.toLowerCase()} ${pet.species.toLowerCase()} ${pet.userEmail?.toLowerCase() || ''} ${(pet.comment || '').toLowerCase()}`;
+        return searchText.includes(searchQuery.toLowerCase());
     });
 
     return (
@@ -75,15 +101,31 @@ function PetList() {
                     filteredPets.map((pet) => (
                         <div key={pet.id} className="pet-container">
                             <strong>Name:</strong> {pet.name}
-                            <br/>
+                            <br />
                             <strong>Species:</strong> {pet.species}
-                            <br/>
+                            <br />
                             <strong>User Email:</strong> {pet.userEmail || 'N/A'}
-                            <div className="button-container">
-                                <button onClick={() => handleKnowPetClick(pet)}>I know this Pet!</button>
+                            <br />
+                            <strong>Comment:</strong>
+                            <div className="comment-container">
+                                {pet.comment ? (
+                                    pet.comment.split('\n\n').map((line, index) => (
+                                        <div key={index} className="comment-line">
+                                            {line}
+                                        </div>
+                                    ))
+                                ) : (
+                                    'N/A'
+                                )}
                             </div>
                             <div className="button-container">
-                                <button onClick={() => handleCommentsClick(pet)}>Comments</button>
+                                <input
+                                    type="text"
+                                    placeholder="Add a new comment"
+                                    value={editedComments[pet.id] || ''}
+                                    onChange={(e) => handleCommentChange(pet.id, e.target.value)}
+                                />
+                                <button onClick={() => handleCommentUpdate(pet)}>Add New Comment</button>
                             </div>
                         </div>
                     ))
@@ -91,12 +133,12 @@ function PetList() {
                     <p>No lost pets found.</p>
                 )}
             </div>
-
             <div>
-                <p>The lost pet you are looking for is not in the list.</p>
+                <p>If the lost pet you are looking for is not in the list...</p>
                 <Link to="/lost-pet">Register the Lost Pet</Link>
             </div>
         </div>
     );
 }
+
 export default PetList;

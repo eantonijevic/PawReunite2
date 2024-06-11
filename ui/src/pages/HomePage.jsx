@@ -3,6 +3,8 @@ import {useLocation, useNavigate} from 'react-router';
 import { useAuthProvider } from '../auth/auth';
 import { useMySystem } from '../service/mySystem';
 import {KennelRegister} from "./KennelRegister";
+import useNotification from "../components/useNotification";
+
 
 export const HomePage = () => {
     const navigate = useNavigate();
@@ -16,6 +18,7 @@ export const HomePage = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const username = searchParams.get('username');
+    const [notification, showNotification, dismissNotification] = useNotification();
 
 
     useEffect(() => {
@@ -64,11 +67,6 @@ export const HomePage = () => {
         }
     };
 
-    const handleEditPet = (petId) => {
-        // Redirect the user to the edit pet page, passing the petId as a query parameter
-        navigate(`/edit-pet?petId=${petId}`);
-    };
-
     const goToRegisterLostPet = () => {
         navigate('/lost-pet');
     };
@@ -78,7 +76,7 @@ export const HomePage = () => {
     };
 
     const goToOwnFlyerMenu = () => {
-        navigate('/lost-pet');
+        navigate(`/own-flyer-menu?username=${username}`, { replace: true });
     };
     const goToOwnNotifyMenu = () => {
         navigate('/own-notify-menu');
@@ -102,17 +100,7 @@ export const HomePage = () => {
         navigate('/create-chat');
     };
 
-    const handleFoundPet = async (petId) => {
-        try {
-            await mySystem.deletePet(token, () => {
-                setLostPets(lostPets.filter(pet => pet.id !== petId));
-            }, () => {
-                // Handle error
-            });
-        } catch (error) {
-            // Handle error
-        }
-    };
+
 
     const userLostPets = lostPets.filter(pet => pet.userEmail === username);
     const isKennelUser = users.some(user => user.type === 'Kennel' && user.email === username);
@@ -133,12 +121,19 @@ export const HomePage = () => {
             console.error('Error deleting pet:', error);
         }
     };
-        return (
-            <div className="container">
-                <nav className="navbar navbar-default" role="navigation">
-                    <div>
-                        <ul className="nav navbar-nav navbar-right">
-                            <li><a href="" onClick={signOut}>Sign Out</a></li></ul></div>
+
+    return (
+        <div className="container">
+            <nav className="navbar navbar-default" role="navigation">
+                <div>
+                    <ul className="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="" onClick={signOut}>
+                                Sign Out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </nav>
             <div className="container">
                 <h1>User</h1>
@@ -215,35 +210,23 @@ export const HomePage = () => {
             </div>
 
             <div className="container">
-                <h1>Lost Pets</h1>
-                <ul>
-                    {userLostPets.map((pet) => (
-                        <li key={pet.id}>
-                            {pet.name}
-                            <br />
-                            {pet.species}
-                            <br /><button type="button" onClick={() => handleEditPet(pet.id)}>
-                            Edit Pet
-                            </button>
-                            <button type="button" onClick={() => handleDeletePet(pet.id)}>
-                                Delete Pet
-                            </button>
-
-                        </li>
-                    ))}
-                </ul>
-            </div>
-
-            <div className="container">
                 <button type="button" onClick={deleteAccount}>
                     Delete Account
                 </button>
             </div>
 
-            <footer className="footer">
-                <p>Footer</p>
-            </footer>
+            <div className="container">
+                <h2>Notifications:</h2>
+                {notification ? (
+                    <div className="notification">
+                        <p>{notification.message}</p>
+                        <p>{notification.timestamp}</p>
+                        <button onClick={dismissNotification}>Dismiss</button>
+                    </div>
+                ) : (
+                    <p>No new notifications.</p>
+                )}
+            </div>
         </div>
     );
-
 };

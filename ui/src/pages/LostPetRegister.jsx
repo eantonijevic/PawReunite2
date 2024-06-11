@@ -7,6 +7,7 @@ function LostPetRegister() {
     const [name, setName] = useState('');
     const [species, setSpecies] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [comment, setComment] = useState('');
     const [registrationStatus, setRegistrationStatus] = useState(null); // Track registration status
     const navigate = useNavigate();
     const mySystem = useMySystem();
@@ -19,6 +20,7 @@ function LostPetRegister() {
             name: name,
             species: species,
             userEmail: userEmail !== '' ? userEmail : null,
+            comment: comment, // Include the comment in the lostPet object
         };
 
         // Send the lostPet object to the server for registration
@@ -54,6 +56,10 @@ function LostPetRegister() {
 
     const handleUserEmailChange = (event) => {
         setUserEmail(event.target.value);
+    };
+
+    const handleCommentChange = (event) => {
+        setComment(event.target.value);
     };
 
     return (
@@ -99,6 +105,17 @@ function LostPetRegister() {
                             value={userEmail}
                             name="userEmail"
                             onChange={handleUserEmailChange}
+                        />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Comment (optional):
+                        <textarea
+                            placeholder="Enter a comment about the lost pet"
+                            value={comment}
+                            name="comment"
+                            onChange={handleCommentChange}
                         />
                     </label>
                 </div>

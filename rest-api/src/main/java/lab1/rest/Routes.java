@@ -27,11 +27,6 @@ public class Routes {
     public static final String USERS_ROUTE = "/users";
 
     public static final String PETS_ROUTE = "/lostpets";
-    public static final String USER_ROUTE = "/user";
-
-    public static final String PET_ROUTE = "/lostpet";
-    public static final String MY_PET_ROUTE = "/own-flyer-menu";
-
 
     private MySystem system;
 
@@ -114,15 +109,16 @@ public class Routes {
             return "";
         });
 
-        authorizedDelete(PETS_ROUTE, (req, res) -> {
-            getLostPet(req).ifPresent(lostPet -> {
-                boolean deleted = system.deleteLostPet(lostPet.getName());
+        delete("/lostpets/:petId", (req, res) -> {
+            getLostPetbyId(req).ifPresent(lostPet -> {
+                boolean deleted = system.deleteLostPetbyId(lostPet.getId());
                 if (deleted) {
                     res.status(204);
                 } else {
                     res.status(404);
                 }
             });
+            res.status(404);
             return "";
         });
 
@@ -136,12 +132,30 @@ public class Routes {
             return JsonParser.toJson(lostPets);
         });
 
-        authorizedGet(USER_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
-        authorizedGet(USER_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
+        get("/lostpets/:petId", (req, res) -> {
+            String petId = req.params(":petId");
+            Optional<LostPet> lostPet = system.findLostPetById(petId);
+            if (lostPet.isPresent()) {
+                return JsonParser.toJson(lostPet.get());
+            } else {
+                res.status(404);
+                return "Pet not found";
+            }
+        });
 
-        authorizedGet(PET_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
-        authorizedGet(PET_ROUTE, (req, res) -> getToken(req).map(JsonParser::toJson));
+        put("/lostpets/:petId", (req, res) -> {
+            String petId = req.params(":petId");
+            final RegistrationPetForm form = RegistrationPetForm.createFromJson(req.body());
 
+            Optional<LostPet> updatedPet = system.updateLostPet(petId, form);
+            if (updatedPet.isPresent()) {
+                res.status(200);
+                return JsonParser.toJson(updatedPet.get());
+            } else {
+                res.status(404);
+                return "Pet not found";
+            }
+        });
 
         post(Kennel_create_ROUTE, (req, res) -> {
             final RegistrationKennelForm form = RegistrationKennelForm.createFromJson(req.body());
@@ -158,10 +172,6 @@ public class Routes {
             );
 
             return res.body();
-        });
-        get(MY_PET_ROUTE,(req, res)->{
-            final List<LostPet> mylostPets = system.listLostPets();
-            return JsonParser.toJson(mylostPets);
         });
 
     }
@@ -195,12 +205,21 @@ public class Routes {
                 .flatMap(name -> system.findLostPetByName(name));
     }
 
-    private Optional<LostPet> getMyPet(Request req) {
-        return getToken(req)
-                .map(nameByToken::getIfPresent)
-                .flatMap(name -> system.findLostPetByName(name));
-    }
+    private Optional<LostPet> getLostPetbyId(Request req) {
+        String petId = req.params(":petId");
+        Optional<String> token = getToken(req);
 
+        if (token.isPresent()) {
+            String validToken = emailByToken.getIfPresent(token.get());
+            if (validToken == null) {
+                return Optional.empty();
+            }
+
+            return system.findLostPetById(petId);
+        } else {
+            return Optional.empty();
+        }
+    }
 
     private final Cache<String, String> emailByToken = CacheBuilder.newBuilder()
             .expireAfterAccess(30, MINUTES)

@@ -61,6 +61,7 @@ public class MySystem {
         );
     }
 
+
     public List<User> listUsers() {
         return runInTransaction(
                 ds -> ds.users().list()
@@ -117,10 +118,41 @@ public class MySystem {
         return lostPets.deleteLostPet(name);
     });
     }
+
+    public boolean deleteLostPetbyId(String id) {
+        return runInTransaction(datasource -> {
+            final LostPets lostPets = datasource.lostPets();
+            return lostPets.deleteLostPetbyId(id);
+        });
+    }
     public boolean deleteKennel(int id) {
         return runInTransaction(datasource -> {
             final Kennels kennels = datasource.kennels();
             return kennels.deleteKennel(id);
+        });
+    }
+
+    public Optional<LostPet> findLostPetById(String petId) {
+        return runInTransaction(
+                ds -> ds.lostPets().findById(petId)
+        );
+    }
+
+    public Optional<LostPet> updateLostPet(String petId, RegistrationPetForm form) {
+        return runInTransaction(datasource -> {
+            final LostPets lostPets = datasource.lostPets();
+            final Optional<LostPet> existingPetOptional = lostPets.findById(petId);
+
+            if (existingPetOptional.isPresent()) {
+                LostPet existingPet = existingPetOptional.get();
+                existingPet.setName(form.getName());
+                existingPet.setSpecies(form.getSpecies());
+                existingPet.setUserEmail(form.getUserEmail());
+                existingPet.setComment(form.getComment());
+                return Optional.of(lostPets.updateLostPet(existingPet));
+            } else {
+                return Optional.empty();
+            }
         });
     }
 }

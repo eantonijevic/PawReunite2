@@ -1,11 +1,14 @@
 import * as React from 'react'
-import {useState} from 'react'
-import {Link, useSearchParams} from "react-router-dom";
-import {useNavigate} from "react-router";
+import {useState, useEffect} from 'react'
+import {Link, useSearchParams, useNavigate} from "react-router-dom";
 import {useMySystem} from "../service/mySystem";
 
-function setToken(userToken) {
-    sessionStorage.setItem('token', JSON.stringify(userToken));
+function getToken() {
+    return JSON.parse(sessionStorage.getItem('token'));
+}
+
+function getEmail() {
+    return sessionStorage.getItem('email');
 }
 
 export const LoginPage = () => {
@@ -17,11 +20,20 @@ export const LoginPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const isOk = searchParams.get("ok")
 
+    useEffect(() => {
+        const token = getToken();
+        const email = getEmail();
+        if (token && email) {
+            // User is already logged in, redirect to home page
+            navigate(`/home?username=${email}`, { replace: true });
+        }
+    }, [navigate]);
+
     function loginUser(credentials) {
         mySystem.login(
             credentials,
             (token) => {
-                setToken(token);
+                setToken(token, credentials.email);
                 navigate(`/home?username=${credentials.email}`, { replace: true });
             },
             (msg) => {
@@ -76,3 +88,8 @@ export const LoginPage = () => {
             <Link to="/register">Sign up</Link>
         </div>
     )}
+
+function setToken(userToken, email) {
+    sessionStorage.setItem('token', JSON.stringify(userToken));
+    sessionStorage.setItem('email', email);
+}
