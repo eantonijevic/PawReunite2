@@ -34,13 +34,36 @@ export const LostPetsPage = () => {
         navigate(`/edit-pet?petId=${petId}`);
     };
 
-    const goToRegisterLostPet = () => {
-        navigate('/lost-pet');
-    };
-
     const userLostPets = lostPets.filter(pet => pet.userEmail === username);
     const handleDeletePet = async (petId) => {
-        // ... (existing code for deleting a pet)
+        try {
+            // Show a confirmation dialog before deleting the pet
+            const confirmed = window.confirm(
+                "Are you sure you want to delete this pet? This action cannot be undone. Please make sure your pet has been found before deleting."
+            );
+
+            if (!confirmed) {
+                return; // User canceled the deletion, so don't proceed
+            }
+
+            // Call the backend to delete the pet
+            await mySystem.deletePet(
+                token,
+                petId,
+                () => {
+                    // Callback for successful deletion
+                    console.log("Pet deleted successfully");
+                    // Update the local state
+                    setLostPets(lostPets.filter((pet) => pet.id !== petId));
+                },
+                (error) => {
+                    // Callback for error in deletion
+                    console.error("Error deleting pet:", error);
+                }
+            );
+        } catch (error) {
+            console.error("Error deleting pet:", error);
+        }
     };
 
     if (!lostPets || lostPets.length === 0) {
@@ -59,9 +82,17 @@ export const LostPetsPage = () => {
                         {pet.species}
                         <br />
                         <strong>Comment:</strong>
-                        <br />
-                        {pet.comment || 'N/A'}
-                        <br />
+                        <div className="comment-container">
+                            {pet.comment ? (
+                                pet.comment.split('\n\n').map((line, index) => (
+                                    <div key={index} className="comment-line">
+                                        {line}
+                                    </div>
+                                ))
+                            ) : (
+                                'N/A'
+                            )}
+                        </div>
                         <button type="button" onClick={() => handleEditPet(pet.id)}>
                             Edit Pet
                         </button>

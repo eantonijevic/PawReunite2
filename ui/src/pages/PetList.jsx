@@ -4,16 +4,18 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 import { useMySystem } from '../service/mySystem';
 import { useAuthProvider } from '../auth/auth';
+import useNotification from "../components/useNotification";
 
 function PetList() {
     const [pets, setPets] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [editedComment, setEditedComment] = useState('');
+    const [editedComments, setEditedComments] = useState({});
     const navigate = useNavigate();
     const mySystem = useMySystem();
     const auth = useAuthProvider();
     const token = auth.getToken();
-    const [updatedPet, setUpdatedPet] = useState(null);
+    const [notification, showNotification] = useNotification();
+
 
 
     useEffect(() => {
@@ -32,11 +34,17 @@ function PetList() {
         setSearchQuery(event.target.value);
     };
 
+    function getEmail() {
+        return sessionStorage.getItem('email');
+    }
+
     const handleCommentUpdate = (pet) => {
-        const now = new Date().toLocaleString();
+        // Update the comment logic
+        const currentTimestamp = new Date().toLocaleString();
+        const userEmail = getEmail();
         const updatedPet = {
             ...pet,
-            comment: `${pet.comment || ''}\n\n[${now}] ${editedComment}`,
+            comment: pet.comment ? `${pet.comment}\n\n${editedComments[pet.id]} (${userEmail ? `${userEmail} - ` : ''}${currentTimestamp})` : `${editedComments[pet.id]} (${userEmail ? `${userEmail} - ` : ''}${currentTimestamp})`,
         };
 
         mySystem.updatePet(
@@ -44,8 +52,19 @@ function PetList() {
             updatedPet,
             () => {
                 console.log('Pet comment updated successfully!');
-                setEditedComment('');
-                setUpdatedPet(updatedPet); // Update the updatedPet state
+                setEditedComments({ ...editedComments, [pet.id]: '' });
+                showNotification(`Comment updated for pet: ${pet.name}`);
+
+                // Refresh the list of pets to show the updated comment
+                mySystem.listLostPets(
+                    token,
+                    (pets) => {
+                        setPets(pets);
+                    },
+                    (error) => {
+                        console.error('Error retrieving lost pets:', error);
+                    }
+                );
             },
             (error) => {
                 console.error('Error updating pet comment:', error);
@@ -53,9 +72,15 @@ function PetList() {
         );
     };
 
-    const filteredPets = pets.map((pet) => (
-        pet.id === updatedPet?.id ? updatedPet : pet
-    ));
+    const handleCommentChange = (petId, newComment) => {
+        setEditedComments({ ...editedComments, [petId]: newComment });
+    };
+
+
+    const filteredPets = pets.filter((pet) => {
+        const searchText = `${pet.name.toLowerCase()} ${pet.species.toLowerCase()} ${pet.userEmail?.toLowerCase() || ''} ${(pet.comment || '').toLowerCase()}`;
+        return searchText.includes(searchQuery.toLowerCase());
+    });
 
     return (
         <div>
@@ -97,8 +122,8 @@ function PetList() {
                                 <input
                                     type="text"
                                     placeholder="Add a new comment"
-                                    value={editedComment}
-                                    onChange={(e) => setEditedComment(e.target.value)}
+                                    value={editedComments[pet.id] || ''}
+                                    onChange={(e) => handleCommentChange(pet.id, e.target.value)}
                                 />
                                 <button onClick={() => handleCommentUpdate(pet)}>Add New Comment</button>
                             </div>

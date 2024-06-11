@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {useLocation, useNavigate} from 'react-router';
 import { useAuthProvider } from '../auth/auth';
 import { useMySystem } from '../service/mySystem';
+import useNotification from "../components/useNotification";
 
 export const HomePage = () => {
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ export const HomePage = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const username = searchParams.get('username');
+    const [notification, showNotification, dismissNotification] = useNotification();
 
 
     useEffect(() => {
@@ -148,9 +150,18 @@ export const HomePage = () => {
                 </button>
             </div>
 
-            <footer className="footer">
-                <p>Footer</p>
-            </footer>
+            <div className="container">
+                <h2>Notifications:</h2>
+                {notification ? (
+                    <div className="notification">
+                        <p>{notification.message}</p>
+                        <p>{notification.timestamp}</p>
+                        <button onClick={dismissNotification}>Dismiss</button>
+                    </div>
+                ) : (
+                    <p>No new notifications.</p>
+                )}
+            </div>
         </div>
     );
 };

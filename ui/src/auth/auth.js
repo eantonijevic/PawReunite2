@@ -9,6 +9,7 @@ const AuthProvider = {
     },
     removeToken: () => {
         sessionStorage.removeItem('token');
+        sessionStorage.removeItem('email');
     }
 };
 
