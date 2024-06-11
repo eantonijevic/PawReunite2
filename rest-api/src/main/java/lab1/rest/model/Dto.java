@@ -1,2 +1,5 @@
-package lab1.rest.model;public class Dto {
+package lab1.rest.model;
+
+public class Dto {
+     public void UserSingUp(){}
 }

@@ -43,11 +43,11 @@ public class MySystem {
         });
     }
 
-//    public Optional<User> findUserByEmail(String email) {
-//        return runInTransaction(
-//                ds -> ds.users().findByEmail(email)
-//        );
-//    }
+    public Optional<User> findUserByEmail(String email) {
+        return runInTransaction(
+                ds -> ds.users().findByEmail(email)
+        );
+    }
 
     public Optional<User> findUserById(int id) {
         return runInTransaction(

@@ -19,14 +19,16 @@ const NavBar = () => {
                 <button style={styles.button_Setting} onClick={() => navigate("/login")}>Registered User</button>
 
                 <button style={styles.button_Setting} onClick={() => navigate("/list") } >Pet List</button>
-                <button style={styles.button_Setting} onClick={() =>navigate("/register")}>Sing Up </button>
+                <button style={styles.button_Setting} onClick={() =>navigate("/register")}>Sign Up </button>
 
                 <button style={styles.button_Setting} onClick={()=> navigate("/vet-Kennel")}>Vet/Kennel</button>
+
+                <button style={styles.button_Setting} onClick={()=> navigate("/map")}>MAP</button>
+
         </div>
     );
 };
 
-// Styles
 
 const styles = {
     navBar: {

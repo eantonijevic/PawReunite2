@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {useLocation, useNavigate} from 'react-router';
 import { useAuthProvider } from '../auth/auth';
 import { useMySystem } from '../service/mySystem';
+import {KennelRegister} from "./KennelRegister";
 
 export const HomePage = () => {
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const HomePage = () => {
 
     const token = auth.getToken();
     const [lostPets, setLostPets] = useState([]);
+    const [users, setUsers] = useState([]);
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -27,6 +29,18 @@ export const HomePage = () => {
             }
         );
     }, []);
+    useEffect(() => {
+        mySystem.listUsers(
+            token,
+            (user) => {
+                setUsers(user);
+            },
+            (error) => {
+                console.error("Error retrieving lost user:", error);
+            }
+        );
+    }, []);
+
 
     const signOut = () => {
         auth.removeToken();
@@ -64,8 +78,13 @@ export const HomePage = () => {
     };
 
     const goToOwnFlyerMenu = () => {
-        navigate('/own-flyer-menu');
+        navigate('/lost-pet');
     };
+    const goToOwnNotifyMenu = () => {
+        navigate('/own-notify-menu');
+    };
+    // agregar los elementos para que se puedan notificar entre usuarios, y si es posible
+    // tocar algo para avanzar los volantes
 
     const goToSavedFlyers = () => {
         navigate('/saved-flyers');
@@ -96,6 +115,8 @@ export const HomePage = () => {
     };
 
     const userLostPets = lostPets.filter(pet => pet.userEmail === username);
+    const isKennelUser = users.some(user => user.type === 'Kennel' && user.email === username);
+
 
     const handleDeletePet = async (petId) => {
         try {
@@ -112,21 +133,13 @@ export const HomePage = () => {
             console.error('Error deleting pet:', error);
         }
     };
-
-    return (
-        <div className="container">
-            <nav className="navbar navbar-default" role="navigation">
-                <div>
-                    <ul className="nav navbar-nav navbar-right">
-                        <li>
-                            <a href="" onClick={signOut}>
-                                Sign Out
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+        return (
+            <div className="container">
+                <nav className="navbar navbar-default" role="navigation">
+                    <div>
+                        <ul className="nav navbar-nav navbar-right">
+                            <li><a href="" onClick={signOut}>Sign Out</a></li></ul></div>
             </nav>
-
             <div className="container">
                 <h1>User</h1>
                 <ul>
@@ -147,6 +160,24 @@ export const HomePage = () => {
                             Search Flyers
                         </button>
                     </li>
+                    {isKennelUser &&
+                        <div>
+                        <li>
+                        <button type="button" onClick={goToOwnFlyerMenu}>
+                            capacity
+                        </button>
+                        </li>
+                        <li>
+                        <button type="button" onClick={goToOwnFlyerMenu}>
+                            Notify a adopption
+                        </button>
+                        </li>
+                        <li >
+                            <button type="button" onClick={goToOwnNotifyMenu}>
+                                Notify
+                            </button>
+                        </li>
+                        </div>}
                     <li>
                         <button type="button" onClick={goToOwnFlyerMenu}>
                             Own Flyer Menu
@@ -157,11 +188,19 @@ export const HomePage = () => {
                             Saved Flyers
                         </button>
                     </li>
-                    <li>
+                    {!isKennelUser ?(
+                        <li>
                         <button type="button" onClick={goToNotifyVeterinarian}>
                             Notify a Veterinarian/Kennel
                         </button>
                     </li>
+                    ):
+                        (<li>
+                            {<button type="button" onClick={goToNotifyVeterinarian}>
+                                Notify anhoter Veterinarian/Kennel
+                            </button>}
+                        </li>
+                        )}
                     <li>
                         <button type="button" onClick={goToViewComments}>
                             View/Reply Comments
@@ -206,4 +245,5 @@ export const HomePage = () => {
             </footer>
         </div>
     );
+
 };

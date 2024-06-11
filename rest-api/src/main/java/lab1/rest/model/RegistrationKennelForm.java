@@ -3,19 +3,18 @@ package lab1.rest.model;
 import static lab1.rest.json.JsonParser.fromJson;
 
 public class RegistrationKennelForm {
-        private final String type = "Kennel";
-        private final int id;
-        private final String name;
-        private final String address;
-        private final String phoneNumber;
-        private final String email;
-        private final String password;
+    private final String name;
+    private final String address;
+    private final String phoneNumber;
+    private final String email;
+    private final String password;
+    private final int Id = new Kennel().getId();
+    private final String type = new Kennel().getType();
 
-        public RegistrationKennelForm(int id, String email, String password, String name, String address, String phoneNumber) {
-            this.id = id;
+        public RegistrationKennelForm(String name, String email, String password, String address, String phoneNumber) {
+            this.name = name;
             this.email = email;
             this.password = password;
-            this.name = name;
             this.address = address;
             this.phoneNumber = phoneNumber;
         }
@@ -42,6 +41,6 @@ public class RegistrationKennelForm {
             return name;
         }
 
-        public int getId() { return id;
+        public int getId() { return Id;
     }
 }

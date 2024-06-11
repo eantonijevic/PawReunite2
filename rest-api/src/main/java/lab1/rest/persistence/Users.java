@@ -37,14 +37,14 @@ public class Users {
     public boolean exists(int id) {
         return findById(id).isPresent();
     }
-//
-//    public Optional<User> findByEmail(String email) {
-//        return entityManager.createQuery("SELECT u FROM User u WHERE u.email LIKE :email", User.class)
-//                .setParameter("email", email).getResultList().stream()
-//                .findFirst();
-//    }
+
+    public Optional<User> findByEmail(String email) {
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.email LIKE :email", User.class)
+                .setParameter("email", email).getResultList().stream()
+                .findFirst();
+    }
     public Optional<User> findById(int id) {
-        return entityManager.createQuery("SELECT u FROM User u WHERE u.id LIKE :id", User.class)
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.id = :id", User.class)
                 .setParameter("id", id).getResultList().stream()
                 .findFirst();
     }

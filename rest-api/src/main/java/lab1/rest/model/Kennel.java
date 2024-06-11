@@ -9,29 +9,31 @@ public class Kennel {
     @Id
     @GeneratedValue
     private int id;
+
+    private String name;
     private String email;
 
     private String password;
 
-    private String name;
-
     private String address;
 
     private String phoneNumber;
+    private String type= "Kennel";
 
     public Kennel() {
     }
 
-    public Kennel(String email, String password, String name, String address, String phoneNumber,String type) {
+    public Kennel(int id, String name, String email, String password, String address, String phoneNumber,String type) {
+        this.id = id;
         this.email = email;
-        this.password = password;
         this.name = name;
+        this.password = password;
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
 
-    public static Kennel create(int id, String email, String password, String name, String address, String phoneNumber,String type) {
-        return new Kennel(email, password, name, address, phoneNumber,type);
+    public static Kennel create(int id, String name, String email, String password, String address, String phoneNumber,String type) {
+        return new Kennel(id,name, email, password, address, phoneNumber,type);
     }
 
     // Getters and Setters
@@ -77,4 +79,5 @@ public class Kennel {
     }
 
     public int getId() {return id;}
+    public String getType() {return type;}
 }

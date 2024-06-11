@@ -16,6 +16,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static lab1.rest.json.JsonParser.toJson;
 import static spark.Spark.*;
 
+
 public class Routes {
 
     public static final String REGISTER_ROUTE = "/register";
@@ -29,6 +30,8 @@ public class Routes {
     public static final String USER_ROUTE = "/user";
 
     public static final String PET_ROUTE = "/lostpet";
+    public static final String MY_PET_ROUTE = "/own-flyer-menu";
+
 
     private MySystem system;
 
@@ -49,6 +52,8 @@ public class Routes {
         });
 
         post(REGISTER_ROUTE, (req, res) -> {
+            // UserSignUpDto data = req.body.toJson
+            // data.type = USER
             final RegistrationUserForm form = RegistrationUserForm.createFromJson(req.body());
 
             system.registerUser(form).ifPresentOrElse(
@@ -154,6 +159,10 @@ public class Routes {
 
             return res.body();
         });
+        get(MY_PET_ROUTE,(req, res)->{
+            final List<LostPet> mylostPets = system.listLostPets();
+            return JsonParser.toJson(mylostPets);
+        });
 
     }
 
@@ -186,6 +195,12 @@ public class Routes {
                 .flatMap(name -> system.findLostPetByName(name));
     }
 
+    private Optional<LostPet> getMyPet(Request req) {
+        return getToken(req)
+                .map(nameByToken::getIfPresent)
+                .flatMap(name -> system.findLostPetByName(name));
+    }
+
 
     private final Cache<String, String> emailByToken = CacheBuilder.newBuilder()
             .expireAfterAccess(30, MINUTES)
@@ -196,7 +211,7 @@ public class Routes {
             .build();
 
     private Optional<String> authenticate(AuthRequest req) {
-        return system.findUserById(req.getId()).flatMap(foundUser -> {
+        return system.findUserByEmail(req.getEmail()).flatMap(foundUser -> {
             if (system.validPassword(req.getPassword(), foundUser)) {
                 final String token = UUID.randomUUID().toString();
                 emailByToken.put(token, foundUser.getEmail());

@@ -14,6 +14,7 @@ public class User {
     private String email;
 
     private String password;
+    private String type = "user";
 
 
     public User() {
@@ -21,9 +22,10 @@ public class User {
 
     public User(int id ,String name, String email, String password, String type) {
         this.id =id;
-        this.name = name;
         this.email = email;
+        this.name = name;
         this.password = password;
+        this.type = type;
     }
 
     public static User create(int id,String name,String email, String password,String type) {
@@ -39,4 +41,5 @@ public class User {
         return password;
     }
     public int getId(){return id;}
+    public String getType(){return type;}
 }
