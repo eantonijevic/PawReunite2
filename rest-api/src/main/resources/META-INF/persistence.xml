@@ -10,6 +10,7 @@
 
         <class>lab1.rest.model.User</class>
         <class>lab1.rest.model.LostPet</class>
+        <class>lab1.rest.model.CurrentPet</class>
         <class>lab1.rest.model.Kennel</class>
 
         <properties>

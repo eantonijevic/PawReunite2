@@ -22,10 +22,14 @@ public class Routes {
     public static final String Kennel_create_ROUTE = "/Kennel_create";
 
     public static final String REGISTERPET_ROUTE = "/registerpet";
+
+    public static final String CURRENT_PET_REGISTER_ROUTE = "/registercurrentpet";
     public static final String AUTH_ROUTE = "/auth";
     public static final String USERS_ROUTE = "/users";
 
     public static final String PETS_ROUTE = "/lostpets";
+
+    public static final String CURRENT_PETS_ROUTE = "/currentpets";
 
     private MySystem system;
 
@@ -119,6 +123,19 @@ public class Routes {
             return "";
         });
 
+        delete("/currentpets/:petId", (req, res) -> {
+            getCurrentPetbyId(req).ifPresent(currentPet -> {
+                boolean deleted = system.deleteCurrentPetbyId(currentPet.getId());
+                if (deleted) {
+                    res.status(204);
+                } else {
+                    res.status(404);
+                }
+            });
+            res.status(404);
+            return "";
+        });
+
         authorizedGet(USERS_ROUTE, (req, res) -> {
             final List<User> users = system.listUsers();
             return JsonParser.toJson(users);
@@ -140,6 +157,11 @@ public class Routes {
             }
         });
 
+        get(CURRENT_PETS_ROUTE, (req, res) -> {
+            final List<CurrentPet> currentPets = system.listCurrentPets();
+            return JsonParser.toJson(currentPets);
+        });
+
         put("/lostpets/:petId", (req, res) -> {
             String petId = req.params(":petId");
             final RegistrationPetForm form = RegistrationPetForm.createFromJson(req.body());
@@ -152,6 +174,37 @@ public class Routes {
                 res.status(404);
                 return "Pet not found";
             }
+        });
+
+        put("/currentpets/:petId", (req, res) -> {
+            String petId = req.params(":petId");
+            final RegistrationCurrentPetForm form = RegistrationCurrentPetForm.createFromJson(req.body());
+
+            Optional<CurrentPet> updatedPet = system.updateCurrentPet(petId, form);
+            if (updatedPet.isPresent()) {
+                res.status(200);
+                return JsonParser.toJson(updatedPet.get());
+            } else {
+                res.status(404);
+                return "Current Pet not found";
+            }
+        });
+
+        post(CURRENT_PET_REGISTER_ROUTE, (req, res) -> {
+            final RegistrationCurrentPetForm form = RegistrationCurrentPetForm.createFromJson(req.body());
+
+            system.registerCurrentPet(form).ifPresentOrElse(
+                    (currentPet) -> {
+                        res.status(201);
+                        res.body("Current Pet created");
+                    },
+                    () -> {
+                        res.status(409);
+                        res.body("Current Pet already exists");
+                    }
+            );
+
+            return res.body();
         });
 
         post(Kennel_create_ROUTE, (req, res) -> {
@@ -217,8 +270,21 @@ public class Routes {
             return Optional.empty();
         }
     }
+    private Optional<CurrentPet> getCurrentPetbyId(Request req) {
+        String petId = req.params(":petId");
+        Optional<String> token = getToken(req);
 
+        if (token.isPresent()) {
+            String validToken = emailByToken.getIfPresent(token.get());
+            if (validToken == null) {
+                return Optional.empty();
+            }
 
+            return system.findCurrentPetById(petId);
+        } else {
+            return Optional.empty();
+        }
+    }
 
     private final Cache<String, String> emailByToken = CacheBuilder.newBuilder()
             .expireAfterAccess(30, MINUTES)

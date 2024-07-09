@@ -56,6 +56,10 @@ export const HomePage = () => {
         navigate('/lost-pet');
     };
 
+    const goToRegisterNonLostPet = () => {
+        navigate('/register-current-pet');
+    };
+
     const goToSearchFlyers = () => {
         navigate('/list');
     };
@@ -109,6 +113,11 @@ export const HomePage = () => {
                     <li>
                         <button type="button" onClick={goToRegisterLostPet}>
                             Add New Flyers
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" onClick={goToRegisterNonLostPet}>
+                            Register your current Pets
                         </button>
                     </li>
                     <li>

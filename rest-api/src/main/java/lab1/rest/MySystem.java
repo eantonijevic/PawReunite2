@@ -1,11 +1,7 @@
 package lab1.rest;
 
-import lab1.rest.model.LostPet;
-import lab1.rest.model.RegistrationPetForm;
-import lab1.rest.model.RegistrationUserForm;
-import lab1.rest.model.RegistrationKennelForm;
-import lab1.rest.model.User;
-import lab1.rest.model.Kennel;
+import lab1.rest.model.*;
+import lab1.rest.persistence.CurrentPets;
 import lab1.rest.persistence.Kennels;
 import lab1.rest.persistence.LostPets;
 import lab1.rest.persistence.Users;
@@ -73,6 +69,63 @@ public class MySystem {
             final LostPets lostpets = datasource.lostPets();
             return lostpets.exists(form.getName()) ? Optional.empty() : Optional.of(lostpets.createLostPet(form));
         });
+    }
+
+    public Optional<CurrentPet> registerCurrentPet(RegistrationCurrentPetForm form) {
+        return runInTransaction(datasource -> {
+            final CurrentPets currentpets = datasource.currentPets();
+            return currentpets.exists(form.getName()) ? Optional.empty() : Optional.of(currentpets.createCurrentPet(form));
+        });
+    }
+
+    public Optional<CurrentPet> findCurrentPetByName(String name) {
+        return runInTransaction(
+                ds -> ds.currentPets().findByName(name)
+        );
+    }
+
+    public Optional<CurrentPet> findCurrentPetById(String petId) {
+        return runInTransaction(
+                ds -> ds.currentPets().findById(petId)
+        );
+    }
+
+    public Optional<CurrentPet> updateCurrentPet(String petId, RegistrationCurrentPetForm form) {
+        return runInTransaction(datasource -> {
+            final CurrentPets currentPets = datasource.currentPets();
+            final Optional<CurrentPet> existingPetOptional = currentPets.findById(petId);
+
+            if (existingPetOptional.isPresent()) {
+                CurrentPet existingPet = existingPetOptional.get();
+                existingPet.setName(form.getName());
+                existingPet.setSpecies(form.getSpecies());
+                existingPet.setUserEmail(form.getUserEmail());
+                existingPet.setComment(form.getComment());
+                return Optional.of(currentPets.updateCurrentPet(existingPet));
+            } else {
+                return Optional.empty();
+            }
+        });
+    }
+
+    public boolean deleteCurrentPet(String name) {
+        return runInTransaction(datasource -> {
+            final CurrentPets currentPets = datasource.currentPets();
+            return currentPets.deleteCurrentPet(name);
+        });
+    }
+
+    public boolean deleteCurrentPetbyId(String id) {
+        return runInTransaction(datasource -> {
+            final CurrentPets currentPets = datasource.currentPets();
+            return currentPets.deleteCurrentPetbyId(id);
+        });
+    }
+
+    public List<CurrentPet> listCurrentPets() {
+        return runInTransaction(
+                ds -> ds.currentPets().list()
+        );
     }
 
     public List<LostPet> listLostPets() {
