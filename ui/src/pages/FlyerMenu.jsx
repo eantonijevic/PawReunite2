@@ -109,6 +109,35 @@ export const LostPetsPage = () => {
         }
     };
 
+    const handleReportAsLost = async (pet) => {
+        try {
+            // Create a new lost pet object with the current pet's details
+            const lostPet = {
+                name: pet.name,
+                species: pet.species,
+                userEmail: pet.userEmail ? pet.userEmail : null, // Use null if userEmail is empty
+                comment: pet.comment ? pet.comment : '', // Use an empty string if comment is empty
+            };
+
+            // Call the backend to register the lost pet
+            await mySystem.registerpet(
+                token,
+                lostPet,
+                () => {
+                    // Callback for successful registration
+                    console.log("Pet reported as lost successfully");
+                    // Remove the pet from the current pets list
+                    setCurrentPets(currentPets.filter((p) => p.id !== pet.id));
+                },
+                (error) => {
+                    // Callback for error in registration
+                    console.error("Error reporting pet as lost:", error);
+                }
+            );
+        } catch (error) {
+            console.error("Error reporting pet as lost:", error);
+        }
+    };
 
     const userLostPets = lostPets.filter(pet => pet.userEmail === username);
     const userCurrentPets = currentPets.filter(pet => pet.userEmail === username);
@@ -168,6 +197,9 @@ export const LostPetsPage = () => {
                         </button>
                         <button type="button" onClick={() => handleDeleteCurrentPet(pet.id, false)}>
                             Delete Pet
+                        </button>
+                        <button type="button" onClick={() => handleReportAsLost(pet)}>
+                            Report as Lost
                         </button>
                     </li>
                 ))}
