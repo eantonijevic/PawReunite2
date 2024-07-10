@@ -22,11 +22,13 @@ const NavBar = () => {
                 <button style={styles.button_Setting} onClick={() =>navigate("/register")}>Sign Up </button>
 
                 <button style={styles.button_Setting} onClick={()=> navigate("/vet-Kennel")}>Vet/Kennel</button>
+
+                <button style={styles.button_Setting} onClick={()=> navigate("/map")}>MAP</button>
+
         </div>
     );
 };
 
-// Styles
 
 const styles = {
     navBar: {

@@ -2,6 +2,7 @@ package lab1.rest.persistence;
 
 import lab1.rest.model.RegistrationKennelForm;
 import lab1.rest.model.Kennel;
+import lab1.rest.model.User;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -42,7 +43,7 @@ public class Kennels {
         }
 
         public Optional<Kennel> findById(int id) {
-            return entityManager.createQuery("SELECT u FROM Kennel u WHERE u.id LIKE :id", Kennel.class)
+            return entityManager.createQuery("SELECT u FROM Kennel u WHERE u.id = :id", Kennel.class)
                     .setParameter("id", id).getResultList().stream()
                     .findFirst();
         }

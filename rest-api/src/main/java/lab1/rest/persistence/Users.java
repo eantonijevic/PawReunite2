@@ -18,14 +18,14 @@ public class Users {
     public User createUser(RegistrationUserForm signUpValues) {
         final User newUser = User.create(signUpValues.getId(),signUpValues.getName(), signUpValues.getEmail(), signUpValues.getPassword(),signUpValues.getType());
 
-        if (exists(newUser.getEmail())) throw new IllegalStateException("User already exists.");
+        if (exists(newUser.getId())) throw new IllegalStateException("User already exists.");
 
         entityManager.persist(newUser);
 
         return newUser;
     }
-    public boolean deleteUser(String email) {
-        Optional<User> optionalUser = findByEmail(email);
+    public boolean deleteUser(int id) {
+        Optional<User> optionalUser = findById(id);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             entityManager.remove(user);
@@ -34,8 +34,8 @@ public class Users {
         return false;
     }
 
-    public boolean exists(String email) {
-        return findByEmail(email).isPresent();
+    public boolean exists(int id) {
+        return findById(id).isPresent();
     }
 
     public Optional<User> findByEmail(String email) {
@@ -44,7 +44,7 @@ public class Users {
                 .findFirst();
     }
     public Optional<User> findById(int id) {
-        return entityManager.createQuery("SELECT u FROM User u WHERE u.id LIKE :id", User.class)
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.id = :id", User.class)
                 .setParameter("id", id).getResultList().stream()
                 .findFirst();
     }

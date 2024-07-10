@@ -16,6 +16,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static lab1.rest.json.JsonParser.toJson;
 import static spark.Spark.*;
 
+
 public class Routes {
 
     public static final String REGISTER_ROUTE = "/register";
@@ -50,6 +51,8 @@ public class Routes {
         });
 
         post(REGISTER_ROUTE, (req, res) -> {
+            // UserSignUpDto data = req.body.toJson
+            // data.type = USER
             final RegistrationUserForm form = RegistrationUserForm.createFromJson(req.body());
 
             system.registerUser(form).ifPresentOrElse(
@@ -100,7 +103,7 @@ public class Routes {
 
         authorizedDelete(USERS_ROUTE, (req, res) -> {
             getUser(req).ifPresent(user -> {
-                boolean deleted = system.deleteUser(user.getEmail());
+                boolean deleted = system.deleteUser(user.getId());
                 if (deleted) {
                     res.status(204);
                 } else {
@@ -285,7 +288,6 @@ public class Routes {
             return Optional.empty();
         }
     }
-
     private final Cache<String, String> emailByToken = CacheBuilder.newBuilder()
             .expireAfterAccess(30, MINUTES)
             .build();
