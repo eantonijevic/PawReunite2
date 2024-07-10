@@ -8,9 +8,8 @@ export const HomePage = () => {
     const navigate = useNavigate();
     const mySystem = useMySystem();
     const auth = useAuthProvider();
-
+    const [users, setUsers] = useState([])
     const token = auth.getToken();
-    const [lostPets, setLostPets] = useState([]);
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -19,13 +18,13 @@ export const HomePage = () => {
 
 
     useEffect(() => {
-        mySystem.listLostPets(
+        mySystem.listUsers(
             token,
-            (lostPets) => {
-                setLostPets(lostPets);
+            (user) => {
+                setUsers(user);
             },
             (error) => {
-                console.error("Error retrieving lost pets:", error);
+                console.error("Error retrieving users:", error);
             }
         );
     }, []);
@@ -84,7 +83,7 @@ export const HomePage = () => {
         navigate('/create-chat');
     };
 
-
+    const isKennelUser = users.some(user=>user.type === 'Kennel' && user.email === username)
 
     return (
         <div className="container">
@@ -101,10 +100,15 @@ export const HomePage = () => {
             </nav>
 
             <div className="container">
+                {!isKennelUser ?(
+                    <li>
                 <h1>User</h1>
-                <ul>
-                        <li>{username}</li>
-                </ul>
+                    </li>):(
+                    <li>
+                        <h1>Kennel</h1>
+                    </li>)
+                }
+                <ul><li>{username}</li></ul>
             </div>
 
             <div className="container">
