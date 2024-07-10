@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router';
+import {useLocation, useNavigate} from 'react-router';
 import { useMySystem } from '../service/mySystem';
 
 function LostPetRegister() {
@@ -11,6 +11,23 @@ function LostPetRegister() {
     const [registrationStatus, setRegistrationStatus] = useState(null); // Track registration status
     const navigate = useNavigate();
     const mySystem = useMySystem();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const petName = searchParams.get('name');
+    const petSpecies = searchParams.get('species');
+    const petMail = searchParams.get('mail');
+
+    useEffect(() => {
+        if (petName) {
+            setName(petName);
+        }
+        if (petSpecies) {
+            setSpecies(petSpecies);
+        }
+        if (petMail) {
+            setUserEmail(petMail);
+        }
+    }, [petName, petSpecies, petMail]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();

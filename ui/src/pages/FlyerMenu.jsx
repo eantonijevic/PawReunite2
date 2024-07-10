@@ -11,6 +11,7 @@ export const LostPetsPage = () => {
     const [lostPets, setLostPets] = useState([]);
     const [currentPets, setCurrentPets] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
+    const [selectedPet, setSelectedPet] = useState(null);
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -111,29 +112,33 @@ export const LostPetsPage = () => {
 
     const handleReportAsLost = async (pet) => {
         try {
-            // Create a new lost pet object with the current pet's details
-            const lostPet = {
-                name: pet.name,
-                species: pet.species,
-                userEmail: pet.userEmail ? pet.userEmail : null, // Use null if userEmail is empty
-                comment: pet.comment ? pet.comment : '', // Use an empty string if comment is empty
-            };
+            // Show a confirmation dialog before deleting the pet
+            const confirmed = window.confirm(
+                "Are you sure you want to report this pet as lost? This will remove the pet from your current pets list."
+            );
+            if (!confirmed) {
+                return; // User canceled the deletion, so don't proceed
+            }
 
-            // Call the backend to register the lost pet
-            await mySystem.registerpet(
+            // Delete the current pet
+            await mySystem.deleteCurrentPet(
                 token,
-                lostPet,
+                pet.id,
                 () => {
-                    // Callback for successful registration
-                    console.log("Pet reported as lost successfully");
-                    // Remove the pet from the current pets list
+                    // Callback for successful deletion
+                    console.log("Current pet deleted successfully");
+                    // Update the local state
                     setCurrentPets(currentPets.filter((p) => p.id !== pet.id));
                 },
                 (error) => {
-                    // Callback for error in registration
-                    console.error("Error reporting pet as lost:", error);
+                    // Callback for error in deletion
+                    console.error("Error deleting current pet:", error);
                 }
             );
+
+            // Navigate to the "Lost Pet" page
+            setSelectedPet(pet);
+            navigate(`/lost-pet?name=${pet.name}&species=${pet.species}&mail=${pet.userEmail}`);
         } catch (error) {
             console.error("Error reporting pet as lost:", error);
         }
