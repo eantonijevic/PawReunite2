@@ -17,6 +17,8 @@ public class LostPet {
 
     private String comment;
 
+    private boolean adopp = false;
+
     public LostPet() {
     }
 
@@ -72,5 +74,12 @@ public class LostPet {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public boolean isAdopp(){
+        return adopp;
+    }
+    public boolean TrueAdopp(){
+        return adopp = true;
     }
 }

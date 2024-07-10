@@ -136,7 +136,12 @@ export const HomePage = () => {
                 </div>
             </nav>
             <div className="container">
-                <h1>User</h1>
+                {!isKennelUser ?(
+                    <li>
+                    <h1>User</h1>
+                    </li>):(<li><h1>Kennel</h1>
+                    </li>)
+                }
                 <ul>
                         <li>{username}</li>
                 </ul>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router';
+import {useLocation, useNavigate} from 'react-router';
 import { useMySystem } from '../service/mySystem';
 
 function LostPetRegister() {
@@ -11,6 +11,10 @@ function LostPetRegister() {
     const [registrationStatus, setRegistrationStatus] = useState(null); // Track registration status
     const navigate = useNavigate();
     const mySystem = useMySystem();
+    const [users, setUsers] = useState([]);
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const username = searchParams.get('username');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -21,6 +25,7 @@ function LostPetRegister() {
             species: species,
             userEmail: userEmail !== '' ? userEmail : null,
             comment: comment, // Include the comment in the lostPet object
+
         };
 
         // Send the lostPet object to the server for registration
@@ -62,6 +67,8 @@ function LostPetRegister() {
         setComment(event.target.value);
     };
 
+    const isKennelUser = users.some(user => user.type === 'Kennel' && user.email === username);
+    let x = '';
     return (
         <div>
             <h2>Register a Lost Pet</h2>
@@ -72,6 +79,19 @@ function LostPetRegister() {
                 <div style={{ color: 'red' }}>Failed to register lost pet. Please try again.</div>
             )}
             <form onSubmit={handleSubmit}>
+                {!isKennelUser &&
+                    <div>
+                        <label>
+                            adoppet?:
+                                <input
+                                    type="text"
+                                    value={x === 'yes' ? true : false}
+                                    placeholder= "yes"
+                                    onChange={handleNameChange}
+
+                                />
+                        </label>
+                    </div>}
                 <div>
                     <label>
                         Name:
