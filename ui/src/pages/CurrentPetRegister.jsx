@@ -8,12 +8,12 @@ export const CurrentPetRegister = () => {
     const [name, setName] = useState('');
     const [species, setSpecies] = useState('');
     const [userEmail, setUserEmail] = useState('');
-    const [dateAdded, setDateAdded] = useState(new Date().toISOString().split('T')[0]);
+    const [date, setDate] = useState(new Date().toLocaleString());
+    const [petHistory, setPetHistory] = useState([]); // Track the pet history
     const [comment, setComment] = useState('');
     const [registrationStatus, setRegistrationStatus] = useState(null); // Track registration status
     const navigate = useNavigate();
     const mySystem = useMySystem();
-    const [currentPet, setCurrentPet] = useState(null); // Track the current pet object
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -23,15 +23,16 @@ export const CurrentPetRegister = () => {
             name: name,
             species: species,
             userEmail: userEmail !== '' ? userEmail : null,
-            dateAdded: new Date().toISOString().split('T')[0],
             comment: comment,
+            date: new Date(date).toISOString(),
         };
 
         mySystem.registerCurrentPet(
-            currentPet,
-            () => {
+            newPet,
+            (savedPet) => {
                 // Registration successful
                 setRegistrationStatus('success'); // Set registration status to success
+                setPetHistory([...petHistory, savedPet]); // Add the new pet to the history
                 resetForm();
             },
             () => {
@@ -47,8 +48,7 @@ export const CurrentPetRegister = () => {
         setName('');
         setSpecies('');
         setUserEmail('');
-        setDateAdded(new Date().toISOString().split('T')[0]);
-        setCurrentPet(null);
+        setDate(new Date().toLocaleString());
     };
 
     const handleNameChange = (event) => {
@@ -64,7 +64,7 @@ export const CurrentPetRegister = () => {
     };
 
     const handleDateAddedChange = (event) => {
-        setDateAdded(event.target.value);
+        setDate(event.target.value);
     };
 
     const handleCommentChange = (event) => {
@@ -98,9 +98,9 @@ export const CurrentPetRegister = () => {
                         Species:
                         <input
                             type="species"
+                            value={species}
                             placeholder="Cat"
                             name="species"
-                            value={species}
                             onChange={handleSpeciesChange}
                         />
                     </label>
@@ -119,23 +119,23 @@ export const CurrentPetRegister = () => {
                 </div>
                 <div>
                     <label>
-                        Date Added:
-                        <input
-                            type="date"
-                            name="dateAdded"
-                            value={dateAdded}
-                            onChange={handleDateAddedChange}
-                        />
-                    </label>
-                </div>
-                <div>
-                    <label>
                         Comment (optional):
                         <textarea
                             placeholder="Enter a comment about the current pet"
                             value={comment}
                             name="comment"
                             onChange={handleCommentChange}
+                        />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Date Added:
+                        <input
+                            type="text"
+                            name="date"
+                            value={date}
+                            onChange={handleDateAddedChange}
                         />
                     </label>
                 </div>

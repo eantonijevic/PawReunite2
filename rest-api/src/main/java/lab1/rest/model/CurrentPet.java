@@ -1,29 +1,37 @@
 package lab1.rest.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name = "CurrentPet")
 public class CurrentPet {
+
+    @Id
     private String id;
     private String name;
+
     private String species;
     private String userEmail;
     private String comment;
-    private Date registrationDate;
+    private String date;
 
     public CurrentPet() {
     }
 
-    public CurrentPet(String id, String name, String species, String userEmail, String comment, Date registrationDate) {
+    public CurrentPet(String id, String name,String species, String userEmail, String comment, String date) {
         this.id = id;
         this.name = name;
         this.species = species;
         this.userEmail = userEmail;
         this.comment = comment;
-        this.registrationDate = registrationDate;
+        this.date = date;
     }
 
-    public static CurrentPet create(String id, String name, String species, String userEmail, String comment, Date registrationDate) {
-        return new CurrentPet(id, name, species, userEmail, comment, registrationDate);
+    public static CurrentPet create(String id, String name, String species, String userEmail, String comment, String date) {
+        return new CurrentPet(id, name, species, userEmail, comment, date);
     }
 
     // Getters and setters
@@ -40,16 +48,12 @@ public class CurrentPet {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getSpecies() {
         return species;
     }
 
-    public void setSpecies(String species) {
-        this.species = species;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUserEmail() {
@@ -68,11 +72,15 @@ public class CurrentPet {
         this.comment = comment;
     }
 
-    public Date getRegistrationDate() {
-        return registrationDate;
+    public String getDate() {
+        return date;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setDate(String registrationDate) {
+        this.date = registrationDate;
+    }
+
+    public void setSpecies(String species) {
+        this.species = species;
     }
 }

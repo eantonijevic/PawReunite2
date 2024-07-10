@@ -101,6 +101,7 @@ public class MySystem {
                 existingPet.setSpecies(form.getSpecies());
                 existingPet.setUserEmail(form.getUserEmail());
                 existingPet.setComment(form.getComment());
+                existingPet.setDate(form.getDate());
                 return Optional.of(currentPets.updateCurrentPet(existingPet));
             } else {
                 return Optional.empty();

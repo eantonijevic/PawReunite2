@@ -12,9 +12,9 @@ public class RegistrationCurrentPetForm {
 
     private final String comment;
 
-    private final Date date;
+    private final String date;
 
-    public RegistrationCurrentPetForm(String name, String species, String userEmail, String comment, Date date) {
+    public RegistrationCurrentPetForm(String name, String species, String userEmail, String comment, String date) {
         this.name = name;
         this.species = species;
         this.userEmail = userEmail;
@@ -42,7 +42,7 @@ public class RegistrationCurrentPetForm {
         return comment;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 }

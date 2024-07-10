@@ -82,6 +82,7 @@ public class CurrentPets {
         pet.setSpecies(existingPet.getSpecies());
         pet.setUserEmail(existingPet.getUserEmail());
         pet.setComment(existingPet.getComment());
+        pet.setDate(existingPet.getDate());
 
         // Persist the updated pet to the database
         entityManager.persist(pet);
