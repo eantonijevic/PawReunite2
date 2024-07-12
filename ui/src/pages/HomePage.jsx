@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {useLocation, useNavigate} from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useAuthProvider } from '../auth/auth';
 import { useMySystem } from '../service/mySystem';
-import {KennelRegister} from "./KennelRegister";
+import { KennelRegister } from "./KennelRegister";
 import useNotification from "../components/useNotification";
 
+const USER_TYPE_KEY = 'userType';
 
 export const HomePage = () => {
     const navigate = useNavigate();
@@ -18,34 +19,34 @@ export const HomePage = () => {
     const searchParams = new URLSearchParams(location.search);
     const username = searchParams.get('username');
     const [notification, showNotification, dismissNotification] = useNotification();
-
+    const [userType, setUserType] = useState(null);
 
     useEffect(() => {
-        mySystem.listUsers(
-            token,
-            (user) => {
-                setUsers(user);
-            },
-            (error) => {
-                console.error("Error retrieving users:", error);
-            }
-        );
+        // Check if userType is already stored in localStorage
+        const storedUserType = localStorage.getItem(USER_TYPE_KEY);
+        if (storedUserType) {
+            setUserType(storedUserType);
+        } else {
+            // Fetch user information and store the userType in localStorage
+            mySystem.listUsers(
+                token,
+                (users) => {
+                    setUsers(users);
+                    const user = users.find((u) => u.email === username);
+                    setUserType(user?.type);
+                    localStorage.setItem(USER_TYPE_KEY, user?.type);
+                },
+                (error) => {
+                    console.error("Error retrieving users:", error);
+                }
+            );
+        }
     }, []);
-    useEffect(() => {
-        mySystem.listUsers(
-            token,
-            (user) => {
-                setUsers(user);
-            },
-            (error) => {
-                console.error("Error retrieving lost user:", error);
-            }
-        );
-    }, []);
-
 
     const signOut = () => {
         auth.removeToken();
+        // Remove the userType from localStorage when signing out
+        localStorage.removeItem(USER_TYPE_KEY);
         navigate('/');
     };
 
@@ -84,8 +85,6 @@ export const HomePage = () => {
     const goToOwnNotifyMenu = () => {
         navigate('/own-notify-menu');
     };
-    // agregar los elementos para que se puedan notificar entre usuarios, y si es posible
-    // tocar algo para avanzar los volantes
 
     const goToSavedFlyers = () => {
         navigate('/saved-flyers');
@@ -103,7 +102,6 @@ export const HomePage = () => {
         navigate('/create-chat');
     };
 
-    const userLostPets = lostPets.filter(pet => pet.userEmail === username);
     const isKennelUser = users.some(user => user.type === 'Kennel' && user.email === username);
 
 
@@ -137,14 +135,17 @@ export const HomePage = () => {
                 </div>
             </nav>
             <div className="container">
-                {!isKennelUser ?(
+                {!isKennelUser ? (
                     <li>
-                    <h1>User</h1>
-                    </li>):(<li><h1>Kennel</h1>
-                    </li>)
-                }
+                        <h1>User</h1>
+                    </li>
+                ) : (
+                    <li>
+                        <h1>Kennel</h1>
+                    </li>
+                )}
                 <ul>
-                        <li>{username}</li>
+                    <li>{username}</li>
                 </ul>
             </div>
 
@@ -166,47 +167,18 @@ export const HomePage = () => {
                             Search Flyers
                         </button>
                     </li>
-                    {isKennelUser &&
-                        <div>
-                        <li>
-                        <button type="button" onClick={goToOwnFlyerMenu}>
-                            capacity
-                        </button>
-                        </li>
-                        <li>
-                        <button type="button" onClick={goToOwnFlyerMenu}>
-                            Notify a adopption
-                        </button>
-                        </li>
-                        <li >
-                            <button type="button" onClick={goToOwnNotifyMenu}>
-                                Notify
-                            </button>
-                        </li>
-                        </div>}
                     <li>
                         <button type="button" onClick={goToOwnFlyerMenu}>
                             Own Flyer Menu
                         </button>
                     </li>
-                    <li>
-                        <button type="button" onClick={goToSavedFlyers}>
-                            Saved Flyers
-                        </button>
-                    </li>
-                    {!isKennelUser ?(
+                    {!isKennelUser && (
                         <li>
-                        <button type="button" onClick={goToNotifyVeterinarian}>
-                            Notify a Veterinarian/Kennel
-                        </button>
-                    </li>
-                    ):
-                        (<li>
-                            {<button type="button" onClick={goToNotifyVeterinarian}>
-                                Notify anhoter Veterinarian/Kennel
-                            </button>}
+                            <button type="button" onClick={goToNotifyVeterinarian}>
+                                Notify a Veterinarian/Kennel
+                            </button>
                         </li>
-                        )}
+                    )}
                     <li>
                         <button type="button" onClick={goToViewComments}>
                             View/Reply Comments

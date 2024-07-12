@@ -11,6 +11,7 @@ export const LostPetsPage = () => {
     const [lostPets, setLostPets] = useState([]);
     const [currentPets, setCurrentPets] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
+    const [userType, setUserType] = useState(getUserType());
     const [selectedPet, setSelectedPet] = useState(null);
 
     const location = useLocation();
@@ -43,7 +44,6 @@ export const LostPetsPage = () => {
             }
         );
     }, []);
-
     const handleEditPet = (petId) => {
         navigate(`/edit-pet?petId=${petId}`);
     };
@@ -144,12 +144,49 @@ export const LostPetsPage = () => {
         }
     };
 
+    const handleReportAsAdopted = async (pet) => {
+        try {
+            // Show a confirmation dialog before deleting the pet
+            const confirmed = window.confirm(
+                "Are you sure you want to report this pet as adopted? This will remove the pet from your current pets list."
+            );
+            if (!confirmed) {
+                return; // User canceled the action, so don't proceed
+            }
+
+            // Delete the current pet
+            await mySystem.deleteCurrentPet(
+                token,
+                pet.id,
+                () => {
+                    // Callback for successful deletion
+                    console.log("Current pet deleted successfully");
+                    // Update the local state
+                    setCurrentPets(currentPets.filter((p) => p.id !== pet.id));
+                },
+                (error) => {
+                    // Callback for error in deletion
+                    console.error("Error deleting current pet:", error);
+                }
+            );
+
+            // Navigate to the "Lost Pet" page
+            setSelectedPet(pet);
+            navigate(`/adopted-pet?name=${pet.name}&species=${pet.species}&mail=${pet.userEmail}`);
+        } catch (error) {
+            console.error("Error reporting pet as adopted:", error);
+        }
+    };
+
     const userLostPets = lostPets.filter(pet => pet.userEmail === username);
     const userCurrentPets = currentPets.filter(pet => pet.userEmail === username);
 
     // Sort the current pets by date added in descending order
     const sortedCurrentPets = userCurrentPets.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+    function getUserType() {
+        return localStorage.getItem('userType');
+    }
 
     return (
         <div className="container">
@@ -185,30 +222,32 @@ export const LostPetsPage = () => {
                 ))}
             </ul>
 
-            <h2>Current Pets</h2>
-            <ul>
-                {sortedCurrentPets.map((pet) => (
-                    <li key={pet.id}>
-                        {pet.name}
-                        <br/>
-                        {pet.species}
-                        <br/>
-                        {pet.comment}
-                        <br/>
-                        {new Date(pet.date).toLocaleString()}
-                        <br/>
-                        <button type="button" onClick={() => handleEditCurrentPet(pet.id, false)}>
-                            Edit Pet
-                        </button>
-                        <button type="button" onClick={() => handleDeleteCurrentPet(pet.id, false)}>
-                            Delete Pet
-                        </button>
-                        <button type="button" onClick={() => handleReportAsLost(pet)}>
-                            Report as Lost
-                        </button>
-                    </li>
-                ))}
-            </ul>
+            <div className="container">
+                <h2>{userType === 'Kennel' ? 'Adopted Pets' : 'Current Pets'}</h2>
+                <ul>
+                    {sortedCurrentPets.map((pet) => (
+                        <li key={pet.id}>
+                            {pet.name}
+                            <br/>
+                            {pet.species}
+                            <br/>
+                            {pet.comment}
+                            <br/>
+                            {new Date(pet.date).toLocaleString()}
+                            <br/>
+                            <button type="button" onClick={() => handleEditCurrentPet(pet.id, false)}>
+                                Edit Pet
+                            </button>
+                            <button type="button" onClick={() => handleDeleteCurrentPet(pet.id, false)}>
+                                Delete Pet
+                            </button>
+                            <button type="button" onClick={() => userType === 'Kennel' ? handleReportAsAdopted(pet) : handleReportAsLost(pet)}>
+                                {userType === 'Kennel' ? 'Report as Adopted' : 'Report as Lost'}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };
