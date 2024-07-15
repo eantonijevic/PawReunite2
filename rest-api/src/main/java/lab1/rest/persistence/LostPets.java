@@ -25,7 +25,8 @@ public class LostPets {
                 signUpValues.getName(),
                 signUpValues.getSpecies(),
                 signUpValues.getUserEmail(),
-                signUpValues.getComment()
+                signUpValues.getComment(),
+                signUpValues.getAdopp()
         );
 
         if (exists(newLostPet.getName())) {
@@ -82,6 +83,7 @@ public class LostPets {
         pet.setSpecies(existingPet.getSpecies());
         pet.setUserEmail(existingPet.getUserEmail());
         pet.setComment(existingPet.getComment());
+        pet.setAdopp(existingPet.getAdopp());
 
         // Persist the updated pet to the database
         entityManager.persist(pet);

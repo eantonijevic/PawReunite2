@@ -13,6 +13,7 @@ export const LostPetsPage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [userType, setUserType] = useState(getUserType());
     const [selectedPet, setSelectedPet] = useState(null);
+    const [maxPets, setMaxPets] = useState(3); // Default maximum pets for Kennels
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -43,6 +44,10 @@ export const LostPetsPage = () => {
                 console.error("Error retrieving current pets:", error);
             }
         );
+
+        if (userType === 'Kennel') {
+            setMaxPets(3); // Update this value to the desired maximum for Kennels
+        }
     }, []);
     const handleEditPet = (petId) => {
         navigate(`/edit-pet?petId=${petId}`);
@@ -172,7 +177,7 @@ export const LostPetsPage = () => {
 
             // Navigate to the "Lost Pet" page
             setSelectedPet(pet);
-            navigate(`/adopted-pet?name=${pet.name}&species=${pet.species}&mail=${pet.userEmail}`);
+            navigate(`/lost-pet?name=${pet.name}&species=${pet.species}&mail=${pet.userEmail}&adopp=${true}`);
         } catch (error) {
             console.error("Error reporting pet as adopted:", error);
         }
@@ -192,14 +197,14 @@ export const LostPetsPage = () => {
         <div className="container">
             <h1>Pets</h1>
             {currentUser && <p>Currently logged in as: {currentUser}</p>}
-            <h2>Lost Pets</h2>
+            <h2>{userType === 'Kennel' ? 'History of Adopted Pets' : 'Lost Pets'}</h2>
             <ul>
                 {userLostPets.map((pet) => (
                     <li key={pet.id}>
                         {pet.name}
-                        <br />
+                        <br/>
                         {pet.species}
-                        <br />
+                        <br/>
                         <strong>Comment:</strong>
                         <div className="comment-container">
                             {pet.comment ? (
@@ -223,7 +228,12 @@ export const LostPetsPage = () => {
             </ul>
 
             <div className="container">
-                <h2>{userType === 'Kennel' ? 'Adopted Pets' : 'Current Pets'}</h2>
+                <h2>{userType === 'Kennel' ? 'Pets up for Adoption' : 'Current Pets'}</h2>
+                {userType === 'Kennel' && (
+                    <p>
+                        Current Pets: {sortedCurrentPets.length} / {maxPets}
+                    </p>
+                )}
                 <ul>
                     {sortedCurrentPets.map((pet) => (
                         <li key={pet.id}>
@@ -241,7 +251,8 @@ export const LostPetsPage = () => {
                             <button type="button" onClick={() => handleDeleteCurrentPet(pet.id, false)}>
                                 Delete Pet
                             </button>
-                            <button type="button" onClick={() => userType === 'Kennel' ? handleReportAsAdopted(pet) : handleReportAsLost(pet)}>
+                            <button type="button"
+                                    onClick={() => userType === 'Kennel' ? handleReportAsAdopted(pet) : handleReportAsLost(pet)}>
                                 {userType === 'Kennel' ? 'Report as Adopted' : 'Report as Lost'}
                             </button>
                         </li>

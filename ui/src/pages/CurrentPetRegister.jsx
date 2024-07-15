@@ -8,7 +8,7 @@ export const CurrentPetRegister = () => {
     const [name, setName] = useState('');
     const [species, setSpecies] = useState('');
     const [userEmail, setUserEmail] = useState('');
-    const [date, setDate] = useState(new Date().toLocaleString());
+    const [date, setDate] = useState(new Date().toISOString());
     const [petHistory, setPetHistory] = useState([]); // Track the pet history
     const [comment, setComment] = useState('');
     const [registrationStatus, setRegistrationStatus] = useState(null); // Track registration status

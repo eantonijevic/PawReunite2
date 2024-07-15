@@ -9,11 +9,14 @@ public class RegistrationPetForm {
 
     private final String comment;
 
-    public RegistrationPetForm(String name, String species, String userEmail, String comment) {
+    private final Boolean adopp;
+
+    public RegistrationPetForm(String name, String species, String userEmail, String comment, Boolean adopp) {
         this.name = name;
         this.species = species;
         this.userEmail = userEmail;
         this.comment = comment;
+        this.adopp = adopp;
     }
 
     public static RegistrationPetForm createFromJson(String body) {
@@ -35,5 +38,8 @@ public class RegistrationPetForm {
     public String getComment() {
         return comment;
     }
-}
+
+    public Boolean getAdopp() { return adopp;}
+    }
+
 

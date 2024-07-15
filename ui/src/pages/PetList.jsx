@@ -16,13 +16,11 @@ function PetList() {
     const token = auth.getToken();
     const [notification, showNotification] = useNotification();
 
-
-
     useEffect(() => {
         mySystem.listLostPets(
             token,
             (pets) => {
-                setPets(pets);
+                setPets(pets.filter((pet) => !pet.adopp));
             },
             (error) => {
                 console.error('Error retrieving lost pets:', error);
@@ -59,7 +57,7 @@ function PetList() {
                 mySystem.listLostPets(
                     token,
                     (pets) => {
-                        setPets(pets);
+                        setPets(pets.filter((pet) => !pet.adopp));
                     },
                     (error) => {
                         console.error('Error retrieving lost pets:', error);
@@ -75,7 +73,6 @@ function PetList() {
     const handleCommentChange = (petId, newComment) => {
         setEditedComments({ ...editedComments, [petId]: newComment });
     };
-
 
     const filteredPets = pets.filter((pet) => {
         const searchText = `${pet.name.toLowerCase()} ${pet.species.toLowerCase()} ${pet.userEmail?.toLowerCase() || ''} ${(pet.comment || '').toLowerCase()}`;

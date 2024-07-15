@@ -7,6 +7,7 @@ function LostPetRegister() {
     const [name, setName] = useState('');
     const [species, setSpecies] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [adopp, setAdopp] = useState(false) // Set adopp to false by default
     const [comment, setComment] = useState('');
     const [registrationStatus, setRegistrationStatus] = useState(null); // Track registration status
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ function LostPetRegister() {
     const petName = searchParams.get('name');
     const petSpecies = searchParams.get('species');
     const petMail = searchParams.get('mail');
+    const petAdopp = searchParams.get('adopp');
 
     useEffect(() => {
         if (petName) {
@@ -28,7 +30,10 @@ function LostPetRegister() {
         if (petMail) {
             setUserEmail(petMail);
         }
-    }, [petName, petSpecies, petMail]);
+        if (petAdopp) {
+            setAdopp(petAdopp === 'true'); // Convert the string value to a boolean
+        }
+    }, [petName, petSpecies, petMail, petAdopp]);
 
     const [users, setUsers] = useState([]);
     const username = searchParams.get('username');
@@ -43,7 +48,7 @@ function LostPetRegister() {
             species: species,
             userEmail: userEmail !== '' ? userEmail : null,
             comment: comment, // Include the comment in the lostPet object
-
+            adopp: adopp // Include the adopp value in the lostPet object
         };
 
         // Send the lostPet object to the server for registration
@@ -67,6 +72,7 @@ function LostPetRegister() {
         setName('');
         setSpecies('');
         setUserEmail('');
+        setAdopp(false); // Reset adopp to false
     };
 
     const handleNameChange = (event) => {
@@ -85,29 +91,31 @@ function LostPetRegister() {
         setComment(event.target.value);
     };
 
+    const handleAdoppChange = (event) => {
+        setAdopp(event.target.value === 'true'); // Convert the string value to a boolean
+    };
+
     const isKennelUser = users.some(user => user.type === 'Kennel' && user.email === username);
-    let x = '';
+
     return (
         <div>
-            <h2>Register a Lost Pet</h2>
+            <h2>{adopp ? 'Register an Adopted Pet' : 'Register a Lost Pet'}</h2>
             {registrationStatus === 'success' && (
-                <div style={{ color: 'green' }}>Lost pet registered successfully!</div>
+                <div style={{ color: 'green' }}>Pet registration successful!</div>
             )}
             {registrationStatus === 'error' && (
-                <div style={{ color: 'red' }}>Failed to register lost pet. Please try again.</div>
+                <div style={{ color: 'red' }}>Failed to register pet. Please try again.</div>
             )}
             <form onSubmit={handleSubmit}>
                 {!isKennelUser &&
                     <div>
                         <label>
                             adoppet?:
-                                <input
-                                    type="text"
-                                    value={x === 'yes' ? true : false}
-                                    placeholder= "yes"
-                                    onChange={handleNameChange}
-
-                                />
+                            <input
+                                type="checkbox"
+                                checked={adopp}
+                                onChange={handleAdoppChange}
+                            />
                         </label>
                     </div>}
                 <div>
@@ -150,7 +158,7 @@ function LostPetRegister() {
                     <label>
                         Comment (optional):
                         <textarea
-                            placeholder="Enter a comment about the lost pet"
+                            placeholder="Enter a comment about the pet"
                             value={comment}
                             name="comment"
                             onChange={handleCommentChange}
@@ -158,7 +166,7 @@ function LostPetRegister() {
                     </label>
                 </div>
                 <div>
-                    <button type="submit">Register Lost Pet</button>
+                    <button type="submit">{adopp ? 'Register Adopted Pet' : 'Register Lost Pet'}</button>
                 </div>
             </form>
             <div>

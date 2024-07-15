@@ -17,21 +17,22 @@ public class LostPet {
 
     private String comment;
 
-    private boolean adopp = false;
+    private boolean adopp;
 
     public LostPet() {
     }
 
-    public LostPet(String id, String name, String species, String userEmail, String comment) {
+    public LostPet(String id, String name, String species, String userEmail, String comment, Boolean adopp) {
         this.id = id;
         this.name = name;
         this.species = species;
         this.userEmail = userEmail;
         this.comment = comment;
+        this.adopp = adopp;
     }
 
-    public static LostPet create(String id, String name, String species, String userEmail, String comment) {
-        return new LostPet(id, name, species, userEmail, comment);
+    public static LostPet create(String id, String name, String species, String userEmail, String comment, Boolean adopp) {
+        return new LostPet(id, name, species, userEmail, comment, adopp);
     }
 
     // Getters and setters
@@ -76,10 +77,7 @@ public class LostPet {
         this.comment = comment;
     }
 
-    public boolean isAdopp(){
-        return adopp;
-    }
-    public boolean TrueAdopp(){
-        return adopp = true;
-    }
+    public boolean getAdopp(){return adopp;}
+
+    public void setAdopp(Boolean adopp){this.adopp = adopp;}
 }
