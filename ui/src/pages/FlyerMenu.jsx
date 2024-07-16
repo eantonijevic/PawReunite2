@@ -17,7 +17,7 @@ export const LostPetsPage = () => {
 
     useEffect(() => {
         // Fetch the current user's information
-            setCurrentUser(username);
+        setCurrentUser(username);
 
         mySystem.listLostPets(
             token,
@@ -77,12 +77,13 @@ export const LostPetsPage = () => {
             <ul>
                 {userLostPets.map((pet) => (
                     <li key={pet.id}>
-                        {pet.name}
-                        <br />
-                        {pet.species}
-                        <br />
-                        <strong>Comment:</strong>
+                        {pet.photo && (
+                            <img src={pet.photo} alt={pet.name} className="pet-photo" />
+                        )}
+                        <h3>{pet.name}</h3>
+                        <p>{pet.species}</p>
                         <div className="comment-container">
+                            <strong>Comment:</strong>
                             {pet.comment ? (
                                 pet.comment.split('\n\n').map((line, index) => (
                                     <div key={index} className="comment-line">

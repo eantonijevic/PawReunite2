@@ -13,6 +13,7 @@ import {KennelRegister} from "./pages/KennelRegister";
 import {PetEdit} from "./pages/PetEdit"
 import {KennelLogin} from "./pages/KennelLogin";
 import {LostPetsPage} from "./pages/FlyerMenu";
+import {Maps} from "./pages/Map";
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/new-association" element={<KennelRegister/>} />
                 <Route path="/existing-association" element={<KennelLogin/>} />
                 <Route path="/own-flyer-menu" element={<LostPetsPage/>} />
+                <Route path="/map" element={<Maps/>} />
                 <Route
                     path="/home"
                     element={

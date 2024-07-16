@@ -1,54 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import {useLocation, useNavigate} from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useMySystem } from '../service/mySystem';
+import Dropzone from 'react-dropzone';
 
 function LostPetRegister() {
     const [name, setName] = useState('');
     const [species, setSpecies] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [comment, setComment] = useState('');
-    const [registrationStatus, setRegistrationStatus] = useState(null); // Track registration status
+    const [registrationStatus, setRegistrationStatus] = useState(null);
     const navigate = useNavigate();
     const mySystem = useMySystem();
     const [users, setUsers] = useState([]);
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const username = searchParams.get('username');
+    const [files, setFiles] = useState([]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Create a new Lost Pet object with the entered details
         const lostPet = {
             name: name,
             species: species,
             userEmail: userEmail !== '' ? userEmail : null,
-            comment: comment, // Include the comment in the lostPet object
-
+            comment: comment,
+            files: files // Include the uploaded files
         };
 
-        // Send the lostPet object to the server for registration
         mySystem.registerpet(
             lostPet,
             () => {
-                // Registration successful
-                setRegistrationStatus('success'); // Set registration status to success
+                setRegistrationStatus('success');
                 resetForm();
             },
             () => {
-                // Registration failed
-                setRegistrationStatus('error'); // Set registration status to error
+                setRegistrationStatus('error');
                 resetForm();
             }
         );
     };
 
     const resetForm = () => {
-        // Clear the form inputs
         setName('');
         setSpecies('');
         setUserEmail('');
+        setFiles([]);
     };
 
     const handleNameChange = (event) => {
@@ -67,8 +65,12 @@ function LostPetRegister() {
         setComment(event.target.value);
     };
 
+    const onDrop = useCallback(acceptedFiles => {
+        setFiles(acceptedFiles);
+    }, []);
+
     const isKennelUser = users.some(user => user.type === 'Kennel' && user.email === username);
-    let x = '';
+
     return (
         <div>
             <h2>Register a Lost Pet</h2>
@@ -79,19 +81,6 @@ function LostPetRegister() {
                 <div style={{ color: 'red' }}>Failed to register lost pet. Please try again.</div>
             )}
             <form onSubmit={handleSubmit}>
-                {!isKennelUser &&
-                    <div>
-                        <label>
-                            adoppet?:
-                                <input
-                                    type="text"
-                                    value={x === 'yes' ? true : false}
-                                    placeholder= "yes"
-                                    onChange={handleNameChange}
-
-                                />
-                        </label>
-                    </div>}
                 <div>
                     <label>
                         Name:
@@ -138,6 +127,28 @@ function LostPetRegister() {
                             onChange={handleCommentChange}
                         />
                     </label>
+                </div>
+                <div>
+                    <Dropzone onDrop={onDrop}>
+                        {({ getRootProps, getInputProps }) => (
+                            <section>
+                                <div {...getRootProps()}>
+                                    <input {...getInputProps()} />
+                                    <button type="button">Agregar imagen</button>
+                                </div>
+                            </section>
+                        )}
+                    </Dropzone>
+                    {files.length > 0 && (
+                        <div>
+                            <h4>Uploaded Files:</h4>
+                            <ul>
+                                {files.map((file, index) => (
+                                    <li key={index}>{file.name}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </div>
                 <div>
                     <button type="submit">Register Lost Pet</button>

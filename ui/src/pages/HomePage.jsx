@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {useLocation, useNavigate} from 'react-router';
 import { useAuthProvider } from '../auth/auth';
 import { useMySystem } from '../service/mySystem';
-import {KennelRegister} from "./KennelRegister";
 import useNotification from "../components/useNotification";
+import {KennelRegister} from "./KennelRegister";
 
 
 export const HomePage = () => {
@@ -143,7 +143,9 @@ export const HomePage = () => {
                     </li>)
                 }
                 <ul>
-                        <li>{username}</li>
+                    {!isKennelUser?(
+                        <li>{username}</li>):(<li><h1>{username}</h1></li>)
+                    }
                 </ul>
             </div>
 

@@ -16,8 +16,6 @@ function PetList() {
     const token = auth.getToken();
     const [notification, showNotification] = useNotification();
 
-
-
     useEffect(() => {
         mySystem.listLostPets(
             token,
@@ -76,7 +74,6 @@ function PetList() {
         setEditedComments({ ...editedComments, [petId]: newComment });
     };
 
-
     const filteredPets = pets.filter((pet) => {
         const searchText = `${pet.name.toLowerCase()} ${pet.species.toLowerCase()} ${pet.userEmail?.toLowerCase() || ''} ${(pet.comment || '').toLowerCase()}`;
         return searchText.includes(searchQuery.toLowerCase());
@@ -100,6 +97,13 @@ function PetList() {
                 {filteredPets.length > 0 ? (
                     filteredPets.map((pet) => (
                         <div key={pet.id} className="pet-container">
+                            {pet.photos && pet.photos.length > 0 && (
+                                <img
+                                    src={pet.photos[0]}
+                                    alt={`Pet: ${pet.name}`}
+                                    className="pet-photo"
+                                />
+                            )}
                             <strong>Name:</strong> {pet.name}
                             <br />
                             <strong>Species:</strong> {pet.species}
